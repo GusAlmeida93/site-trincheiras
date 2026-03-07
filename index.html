@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Atividade interativa de História para o 9º ano sobre o Tratado de Versalhes: contextualização, cláusulas, mapa estratégico, questões e desafio das trincheiras.">
+  <meta name="theme-color" content="#1f2933">
+  <title>O Tratado de Versalhes: Paz ou Pausa?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Special+Elite&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="styles.css?v=5">
+</head>
+
+<body>
+  <noscript>
+    <p style="padding:2rem;text-align:center;font-family:sans-serif;color:#1f2933;">
+      Este site requer JavaScript para funcionar. Por favor, habilite o JavaScript no seu navegador.
+    </p>
+  </noscript>
+  <main class="layout">
+    <header id="hero-banner" class="hero reveal">
+      <div id="hero-recruit" class="hero-recruit" hidden>
+        <img id="hero-recruit-avatar" class="hero-recruit-avatar" src="" alt="Avatar do aluno">
+        <p id="hero-recruit-name" class="hero-recruit-name">Nome do aluno</p>
+        <p id="hero-recruit-class" class="hero-recruit-class">Turma</p>
+      </div>
+
+      <div class="hero-title">
+        <p class="kicker">9º ano • História</p>
+        <h1>O Tratado de Versalhes:<br>Paz ou Pausa?</h1>
+      </div>
+
+      <div class="hero-balance" aria-hidden="true"></div>
+    </header>
+    <nav class="block-tabs reveal" role="tablist" aria-label="Abas dos blocos da atividade">
+      <button class="block-tab active" data-target="alistamento" role="tab" aria-selected="true">Alistamento</button>
+      <button class="block-tab" data-target="contexto2" role="tab" aria-selected="false">Contextualização</button>
+      <button class="block-tab" data-target="participantes" role="tab" aria-selected="false">Participantes</button>
+      <button class="block-tab" data-target="clausulas" role="tab" aria-selected="false">Cláusulas</button>
+      <button class="block-tab" data-target="mapa" role="tab" aria-selected="false">Mapa Estratégico</button>
+      <button class="block-tab" data-target="questoes" role="tab" aria-selected="false">Questões</button>
+      <button class="block-tab" data-target="desafio" role="tab" aria-selected="false">Desafio</button>
+    </nav>
+
+    <!-- #contexto (dossier panel) was removed: no tab ever targeted it, making it unreachable.
+         The "Contextualização" tab targets #contexto2, which is the active context section. -->
+
+    <section class="card reveal block-panel" id="contexto2" role="tabpanel" hidden>
+      <div class="context2-intro">
+        <p>
+          Em novembro de 1918, as armas finalmente silenciaram na Europa. A Primeira Guerra Mundial havia terminado,
+          deixando um rastro de destruição sem precedentes, impérios em ruínas e milhões de mortos.
+        </p>
+        <p>
+          Em 1919, os líderes dos países vencedores se reuniram na Conferência de Paz de Paris para decidir o futuro do
+          mundo e, principalmente, o destino da Alemanha, considerada a grande derrotada.
+        </p>
+      </div>
+
+      <section class="intel-board" aria-label="Quadro interativo da Conferência de Paz">
+        <p class="intel-board-tip">Clique em uma foto para virar o cartão e revelar a informação.</p>
+
+        <div class="intel-board-frame">
+          <button class="intel-photo-card" data-intel="causas" aria-pressed="false" type="button">
+            <span class="intel-photo-flip">
+              <span class="intel-photo-face intel-photo-front">
+                <span class="intel-photo-tag">Causas</span>
+                <span class="intel-photo-shot photo-causas" aria-hidden="true"></span>
+                <span class="intel-photo-foot">Big Four</span>
+              </span>
+              <span class="intel-photo-face intel-photo-back">
+                <span class="intel-back-title">Causas</span>
+                <span class="intel-back-text">
+                  A guerra terminou em 1918 com destruição massiva. França e Reino Unido queriam punir a Alemanha e
+                  garantir segurança para evitar novos conflitos.
+                </span>
+              </span>
+            </span>
+          </button>
+
+          <button class="intel-photo-card" data-intel="pontos" aria-pressed="false" type="button">
+            <span class="intel-photo-flip">
+              <span class="intel-photo-face intel-photo-front">
+                <span class="intel-photo-tag">Principais Pontos</span>
+                <span class="intel-photo-shot photo-pontos" aria-hidden="true"></span>
+                <span class="intel-photo-foot">Signing Treaty</span>
+              </span>
+              <span class="intel-photo-face intel-photo-back">
+                <span class="intel-back-title">Principais Pontos</span>
+                <span class="intel-back-text">
+                  O Tratado impôs perdas territoriais, limitação militar, pagamento de indenizações e a cláusula de
+                  culpa pela guerra.
+                </span>
+              </span>
+            </span>
+          </button>
+
+          <button class="intel-photo-card" data-intel="consequencias" aria-pressed="false" type="button">
+            <span class="intel-photo-flip">
+              <span class="intel-photo-face intel-photo-front">
+                <span class="intel-photo-tag">Consequências</span>
+                <span class="intel-photo-shot photo-consequencias" aria-hidden="true"></span>
+                <span class="intel-photo-foot">Anti-Treaty Rally</span>
+              </span>
+              <span class="intel-photo-face intel-photo-back">
+                <span class="intel-back-title">Consequências</span>
+                <span class="intel-back-text">
+                  A Alemanha enfrentou crise econômica, inflação e desemprego. A sensação de humilhação agravou tensões
+                  políticas no período entre guerras.
+                </span>
+              </span>
+            </span>
+          </button>
+
+          <button class="intel-photo-card" data-intel="reacoes" aria-pressed="false" type="button">
+            <span class="intel-photo-flip">
+              <span class="intel-photo-face intel-photo-front">
+                <span class="intel-photo-tag">Reações</span>
+                <span class="intel-photo-shot photo-reacoes" aria-hidden="true"></span>
+                <span class="intel-photo-foot">Reações Populares</span>
+              </span>
+              <span class="intel-photo-face intel-photo-back">
+                <span class="intel-back-title">Reações</span>
+                <span class="intel-back-text">
+                  Muitos alemães consideraram o acordo um “Diktat”. Protestos e discursos nacionalistas cresceram,
+                  contribuindo para a radicalização política.
+                </span>
+              </span>
+            </span>
+          </button>
+        </div>
+      </section>
+    </section>
+
+    <section class="card reveal block-panel active" id="alistamento" role="tabpanel">
+      <div class="enlist-panel">
+        <header class="enlist-header">
+          <h2>Alistamento da Missão</h2>
+        </header>
+        <p class="enlist-intro">
+          Preencha suas credenciais para entrar na operação. Os campos obrigatórios são: <strong>nome completo</strong>
+          e <strong>turma</strong>.
+        </p>
+
+        <form id="enlist-form" class="enlist-form" novalidate>
+          <label for="enlist-name">Nome completo</label>
+          <input id="enlist-name" name="enlist-name" type="text" autocomplete="name"
+            placeholder="Ex.: Ana Carolina Souza" required>
+
+          <label for="enlist-class">Turma</label>
+          <input id="enlist-class" name="enlist-class" type="text" autocomplete="off" placeholder="Ex.: 9º A" required>
+
+          <div class="enlist-avatar-guide">
+            <button id="enlist-avatar-toggle" class="enlist-avatar-toggle" type="button" aria-expanded="true"
+              aria-controls="enlist-avatar-panel">
+              <span class="enlist-avatar-toggle-label">Guia de seleção de avatares</span>
+              <span class="enlist-avatar-toggle-icon" aria-hidden="true">▾</span>
+            </button>
+
+            <div id="enlist-avatar-panel" class="enlist-avatar-panel">
+              <div class="enlist-avatar-wrap">
+                <p class="enlist-avatar-title">Escolha seu avatar</p>
+                <div id="enlist-avatar-grid" class="enlist-avatar-grid" role="radiogroup"
+                  aria-label="Seleção de avatar do aluno"></div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="enlist-submit">Emitir credencial</button>
+        </form>
+
+        <p class="enlist-feedback" id="enlist-feedback" aria-live="polite"></p>
+
+        <article class="enlist-card" id="enlist-card" hidden>
+          <header class="enlist-card-top">
+            <p class="enlist-card-kicker">Comando Escolar • Missão Versalhes</p>
+            <span class="enlist-card-stamp" aria-hidden="true">AUTORIZADO</span>
+          </header>
+
+          <div class="enlist-card-shell">
+            <div class="enlist-card-head">
+              <img id="enlist-card-avatar" class="enlist-card-avatar" src="" alt="Avatar do aluno">
+              <p class="enlist-card-photo-tag">Foto de identificação</p>
+            </div>
+
+            <div class="enlist-card-body">
+              <h3 id="enlist-card-name">Nome do Aluno</h3>
+              <p class="enlist-card-line"><strong>Turma:</strong> <span id="enlist-card-class">-</span></p>
+              <p class="enlist-card-line"><strong>Nº de recruta:</strong> <span id="enlist-card-id">-</span></p>
+              <p class="enlist-card-line"><strong>Emissão:</strong> <span id="enlist-card-issued">-</span></p>
+              <p class="enlist-card-authline">Assinatura do comando: __________________</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="card reveal block-panel" id="participantes" role="tabpanel" hidden>
+      <div class="interests-panel">
+        <header class="interests-header">
+          <span class="interests-mark" aria-hidden="true">⚖</span>
+          <h2>Os Interesses em Jogo</h2>
+        </header>
+
+        <p class="interests-subtitle">
+          Selecione uma bandeira para descobrir o que cada país queria na Conferência de Paz:
+        </p>
+
+        <div class="flag-row" role="tablist" aria-label="Países participantes da conferência">
+          <button class="flag-card" data-participant="franca" role="tab" aria-selected="false">
+            <span class="flag-sticker" aria-hidden="true">
+              <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="114" height="74" rx="8" fill="#d9cdb5" />
+                <rect x="6" y="6" width="108" height="68" rx="6" fill="#e8e0cf" stroke="#5d4e3a" stroke-width="2"
+                  stroke-dasharray="3 2" />
+                <rect x="10" y="10" width="33" height="60" rx="3" fill="#1a3f77" opacity="0.88" />
+                <rect x="43" y="10" width="34" height="60" rx="0" fill="#eae5da" opacity="0.92" />
+                <rect x="77" y="10" width="33" height="60" rx="3" fill="#b03035" opacity="0.88" />
+                <path d="M6 6 Q60 3 114 6 Q117 40 114 74 Q60 77 6 74 Q3 40 6 6Z" fill="none" stroke="#4a3c2e"
+                  stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            <span class="flag-country-name">França</span>
+          </button>
+          <button class="flag-card" data-participant="reino" role="tab" aria-selected="false">
+            <span class="flag-sticker" aria-hidden="true">
+              <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="114" height="74" rx="8" fill="#d9cdb5" />
+                <rect x="6" y="6" width="108" height="68" rx="6" fill="#1e3f84" stroke="#5d4e3a" stroke-width="2"
+                  stroke-dasharray="3 2" />
+                <polygon points="6,6 26,6 114,60 114,74 94,74 6,20" fill="#e8e2d6" opacity="0.92" />
+                <polygon points="114,6 94,6 6,60 6,74 26,74 114,20" fill="#e8e2d6" opacity="0.92" />
+                <polygon points="6,6 14,6 114,64 114,74 106,74 6,16" fill="#c8102e" opacity="0.85" />
+                <polygon points="114,6 106,6 6,64 6,74 14,74 114,16" fill="#c8102e" opacity="0.85" />
+                <rect x="6" y="30" width="108" height="20" fill="#e8e2d6" opacity="0.92" />
+                <rect x="50" y="6" width="20" height="68" fill="#e8e2d6" opacity="0.92" />
+                <rect x="6" y="34" width="108" height="12" fill="#c8102e" opacity="0.85" />
+                <rect x="54" y="6" width="12" height="68" fill="#c8102e" opacity="0.85" />
+                <path d="M6 6 Q60 3 114 6 Q117 40 114 74 Q60 77 6 74 Q3 40 6 6Z" fill="none" stroke="#4a3c2e"
+                  stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            <span class="flag-country-name">Reino Unido</span>
+          </button>
+          <button class="flag-card" data-participant="eua" role="tab" aria-selected="false">
+            <span class="flag-sticker" aria-hidden="true">
+              <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="114" height="74" rx="8" fill="#d9cdb5" />
+                <rect x="6" y="6" width="108" height="68" rx="6" fill="#e8e0cf" stroke="#5d4e3a" stroke-width="2"
+                  stroke-dasharray="3 2" />
+                <g opacity="0.88">
+                  <rect x="10" y="10" width="100" height="5" rx="1" fill="#b12847" />
+                  <rect x="10" y="20" width="100" height="5" rx="1" fill="#b12847" />
+                  <rect x="10" y="30" width="100" height="5" rx="1" fill="#b12847" />
+                  <rect x="10" y="40" width="100" height="5" rx="1" fill="#b12847" />
+                  <rect x="10" y="50" width="100" height="5" rx="1" fill="#b12847" />
+                  <rect x="10" y="60" width="100" height="5" rx="1" fill="#b12847" />
+                </g>
+                <rect x="10" y="10" width="42" height="30" rx="2" fill="#1d3f79" opacity="0.9" />
+                <g fill="#e8e0cf" opacity="0.85">
+                  <circle cx="17" cy="15" r="1.2" />
+                  <circle cx="24" cy="15" r="1.2" />
+                  <circle cx="31" cy="15" r="1.2" />
+                  <circle cx="38" cy="15" r="1.2" />
+                  <circle cx="45" cy="15" r="1.2" />
+                  <circle cx="20" cy="20" r="1.2" />
+                  <circle cx="27" cy="20" r="1.2" />
+                  <circle cx="34" cy="20" r="1.2" />
+                  <circle cx="41" cy="20" r="1.2" />
+                  <circle cx="17" cy="25" r="1.2" />
+                  <circle cx="24" cy="25" r="1.2" />
+                  <circle cx="31" cy="25" r="1.2" />
+                  <circle cx="38" cy="25" r="1.2" />
+                  <circle cx="45" cy="25" r="1.2" />
+                  <circle cx="20" cy="30" r="1.2" />
+                  <circle cx="27" cy="30" r="1.2" />
+                  <circle cx="34" cy="30" r="1.2" />
+                  <circle cx="41" cy="30" r="1.2" />
+                  <circle cx="17" cy="35" r="1.2" />
+                  <circle cx="24" cy="35" r="1.2" />
+                  <circle cx="31" cy="35" r="1.2" />
+                  <circle cx="38" cy="35" r="1.2" />
+                  <circle cx="45" cy="35" r="1.2" />
+                </g>
+                <path d="M6 6 Q60 3 114 6 Q117 40 114 74 Q60 77 6 74 Q3 40 6 6Z" fill="none" stroke="#4a3c2e"
+                  stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            <span class="flag-country-name">Estados Unidos</span>
+          </button>
+          <button class="flag-card" data-participant="alemanha" role="tab" aria-selected="false">
+            <span class="flag-sticker" aria-hidden="true">
+              <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="114" height="74" rx="8" fill="#d9cdb5" />
+                <rect x="6" y="6" width="108" height="68" rx="6" fill="#e8e0cf" stroke="#5d4e3a" stroke-width="2"
+                  stroke-dasharray="3 2" />
+                <rect x="10" y="10" width="100" height="20" rx="3" fill="#1a1a1a" opacity="0.88" />
+                <rect x="10" y="30" width="100" height="20" rx="0" fill="#a92027" opacity="0.88" />
+                <rect x="10" y="50" width="100" height="20" rx="3" fill="#d0ae36" opacity="0.88" />
+                <path d="M6 6 Q60 3 114 6 Q117 40 114 74 Q60 77 6 74 Q3 40 6 6Z" fill="none" stroke="#4a3c2e"
+                  stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            <span class="flag-country-name">Alemanha</span>
+          </button>
+        </div>
+
+        <div class="interests-divider" aria-hidden="true"></div>
+
+        <div class="interest-result" id="interest-result" aria-live="polite" hidden>
+          <div class="interest-result-header">
+            <div>
+              <h3 id="interest-title">França</h3>
+              <p class="interest-leader" id="interest-leader">Georges Clemenceau</p>
+              <span class="interest-role" id="interest-role">O Tigre</span>
+            </div>
+          </div>
+          <p class="interest-description" id="interest-text">
+            Defendia punições severas para enfraquecer a Alemanha, recuperar regiões perdidas e garantir segurança para
+            que a França não sofresse nova invasão.
+          </p>
+          <div class="interest-objectives">
+            <h4>Principais Objetivos</h4>
+            <ul id="interest-objectives-list"></ul>
+          </div>
+          <blockquote class="interest-quote" id="interest-quote"></blockquote>
+        </div>
+      </div>
+    </section>
+
+    <section class="card reveal block-panel" id="mapa" role="tabpanel" hidden>
+      <div class="map-panel">
+        <header class="map-header">
+          <span class="map-header-icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="32" cy="32" r="28" opacity="0.25" />
+              <circle cx="32" cy="32" r="20" opacity="0.15" />
+              <line x1="32" y1="2" x2="32" y2="14" />
+              <line x1="32" y1="50" x2="32" y2="62" />
+              <line x1="2" y1="32" x2="14" y2="32" />
+              <line x1="50" y1="32" x2="62" y2="32" />
+              <polygon points="32,6 35,16 29,16" fill="currentColor" stroke="none" />
+              <path d="M32 12 L32 52" opacity="0.3" />
+              <path d="M12 32 L52 32" opacity="0.3" />
+              <circle cx="32" cy="32" r="4" fill="currentColor" opacity="0.6" />
+              <text x="32" y="9" text-anchor="middle" font-size="6" font-weight="700" fill="currentColor" stroke="none"
+                font-family="Courier Prime, monospace">N</text>
+            </svg>
+          </span>
+          <div>
+            <h2>Mapa Estratégico</h2>
+            <p class="map-header-sub">Perdas Territoriais do Império Alemão</p>
+          </div>
+        </header>
+
+        <p class="map-intro">
+          Analise as perdas territoriais sofridas pela Alemanha após a Primeira Guerra Mundial. O Império Alemão perdeu
+          territórios não apenas na Europa, mas em outras regiões do mundo. Clique nos territórios destacados ou na
+          legenda para explorar detalhes.
+        </p>
+
+        <div class="map-region-tabs" role="tablist" aria-label="Regiões do mapa estratégico">
+          <button class="map-region-btn active" data-map-region="europa" role="tab" aria-selected="true">Europa
+            <span class="map-region-count">5</span></button>
+          <button class="map-region-btn" data-map-region="africa" role="tab" aria-selected="false">África
+            <span class="map-region-count">4</span></button>
+          <button class="map-region-btn" data-map-region="asia" role="tab" aria-selected="false">Ásia e Pacífico
+            <span class="map-region-count">4</span></button>
+        </div>
+
+        <div class="map-canvas-wrap">
+          <div id="strategic-map" aria-label="Mapa interativo das perdas territoriais"></div>
+        </div>
+
+        <div id="map-legend" class="map-legend" aria-label="Legenda dos territórios"></div>
+
+        <p class="map-region-note" id="map-region-note">
+          Europa: áreas destacadas representam regiões retiradas da Alemanha pelo Tratado de Versalhes.
+        </p>
+      </div>
+    </section>
+
+    <section class="card reveal block-panel" id="clausulas" role="tabpanel" hidden>
+      <div class="clause-layout">
+        <aside class="clause-index" aria-label="Índice de artigos do tratado">
+          <p class="clause-index-title">ÍNDICE DE ARTIGOS</p>
+
+          <button class="clause-item active" data-article="51" aria-selected="true">
+            <span class="clause-item-number">ARTIGO 51</span>
+            <span class="clause-item-title">Devolução da Alsácia-Lorena</span>
+            <span class="clause-item-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button class="clause-item" data-article="119" aria-selected="false">
+            <span class="clause-item-number">ARTIGO 119</span>
+            <span class="clause-item-title">Renúncia do Império Colonial</span>
+            <span class="clause-item-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button class="clause-item" data-article="160" aria-selected="false">
+            <span class="clause-item-number">ARTIGO 160</span>
+            <span class="clause-item-title">Desmilitarização</span>
+            <span class="clause-item-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button class="clause-item" data-article="231" aria-selected="false">
+            <span class="clause-item-number">ARTIGO 231</span>
+            <span class="clause-item-title">A Cláusula de Culpa</span>
+            <span class="clause-item-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button class="clause-item" data-article="232" aria-selected="false">
+            <span class="clause-item-number">ARTIGO 232</span>
+            <span class="clause-item-title">Reparações Financeiras</span>
+            <span class="clause-item-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button class="clause-item" data-article="42" aria-selected="false">
+            <span class="clause-item-number">ARTIGO 42</span>
+            <span class="clause-item-title">Desmilitarização da Renânia</span>
+            <span class="clause-item-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <button class="clause-item" data-article="87" aria-selected="false">
+            <span class="clause-item-number">ARTIGO 87</span>
+            <span class="clause-item-title">O Corredor Polonês</span>
+            <span class="clause-item-arrow" aria-hidden="true">›</span>
+          </button>
+        </aside>
+
+        <article class="clause-document" aria-live="polite">
+          <header class="clause-document-head">
+            <span class="clause-document-icon" id="clause-doc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 5h2l1 10h12l1-10h2" />
+                <path d="M6 5v14h12V5" />
+                <path d="M9 8v3m0 0l3-2m-3 2l3 2" />
+                <path d="M6 19l-2 2m14-2l2 2" />
+                <rect x="8" y="3" width="8" height="2" rx="1" />
+                <path d="M10 12h4m-2-2v4" opacity="0.5" />
+              </svg></span>
+            <div>
+              <p class="clause-document-number" id="clause-doc-number">Artigo 51</p>
+              <h3 class="clause-document-title" id="clause-doc-title">Devolução da Alsácia-Lorena</h3>
+            </div>
+          </header>
+
+          <p class="clause-document-label">TEXTO ORIGINAL (TRADUZIDO)</p>
+          <blockquote class="clause-document-quote" id="clause-doc-quote">
+            “Os territórios cedidos à Alemanha em virtude dos preliminares de paz de 1871 são reintegrados à soberania
+            francesa.”
+          </blockquote>
+
+          <section class="clause-document-impact">
+            <h4>O QUE ISSO SIGNIFICOU NA PRÁTICA?</h4>
+            <p id="clause-doc-impact">
+              A Alemanha perdeu uma região estratégica e simbolicamente importante, fortalecendo sentimentos de revanche
+              e ressentimento nacional.
+            </p>
+          </section>
+        </article>
+      </div>
+    </section>
+
+    <section class="card reveal block-panel" id="atividade" role="tabpanel" hidden>
+      <div class="card-header">
+        <h2>Atividade Principal: Simulação da Conferência de Paz</h2>
+      </div>
+
+      <p class="intro">
+        A turma simula as negociações de 1919 e decide termos de paz.
+      </p>
+
+      <div class="delegation-grid">
+        <button class="delegation-card" data-role="franca">
+          <h3>França</h3>
+          <p>Busca segurança e punições rígidas.</p>
+        </button>
+        <button class="delegation-card" data-role="reino">
+          <h3>Reino Unido</h3>
+          <p>Defende equilíbrio político e econômico.</p>
+        </button>
+        <button class="delegation-card" data-role="eua">
+          <h3>Estados Unidos</h3>
+          <p>Tenta aproximar o acordo dos 14 Pontos.</p>
+        </button>
+        <button class="delegation-card" data-role="alemanha">
+          <h3>Alemanha</h3>
+          <p>Tenta reduzir punições e preservar a economia.</p>
+        </button>
+      </div>
+
+      <div class="delegation-details" id="delegation-details" aria-live="polite">
+        <h3>Selecione uma delegação</h3>
+        <p>Clique em um bloco acima para ver metas e argumentos sugeridos para o grupo.</p>
+      </div>
+
+      <div class="steps">
+        <h3>Roteiro rápido da simulação</h3>
+        <ol>
+          <li>Leitura dos papéis e preparação de argumentos.</li>
+          <li>Apresentação de propostas por delegação.</li>
+          <li>Negociação final e assinatura simbólica.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="card reveal block-panel" id="questoes" role="tabpanel" hidden>
+      <div class="war-room">
+        <p class="war-room-brief">
+          <strong>Sala de Comando de Guerra:</strong> Organize os relatórios de inteligência. Arraste (ou clique) em
+          cada documento do quadro de
+          planejamento para a gaveta do arquivo correspondente à pergunta.
+        </p>
+
+        <div class="war-score-panel">
+          <strong>Pontuação:</strong> <span id="war-score">0</span> pontos
+        </div>
+
+        <div class="war-room-grid">
+          <section class="war-cabinet" aria-label="Arquivo confidencial">
+            <header class="war-cabinet-head">ARQUIVO CONFIDENCIAL</header>
+
+            <div class="war-drawers">
+              <article class="war-drawer" data-drawer="1">
+                <span class="war-drawer-label">GAVETA 01</span>
+                <p>Qual era a principal diferença entre a visão de Woodrow Wilson (EUA) e a de Georges Clemenceau
+                  (França) na Conferência de Paz?</p>
+                <div class="war-drawer-answer" aria-live="polite"></div>
+              </article>
+
+              <article class="war-drawer" data-drawer="2">
+                <span class="war-drawer-label">GAVETA 02</span>
+                <p>O que determinava a "Cláusula de Culpa" (Artigo 231) do Tratado de Versalhes?</p>
+                <div class="war-drawer-answer" aria-live="polite"></div>
+              </article>
+
+              <article class="war-drawer" data-drawer="3">
+                <span class="war-drawer-label">GAVETA 03</span>
+                <p>Por que muitos historiadores e os próprios alemães chamam o Tratado de Versalhes de "um ditado"
+                  (Diktat)?</p>
+                <div class="war-drawer-answer" aria-live="polite"></div>
+              </article>
+
+              <article class="war-drawer" data-drawer="4">
+                <span class="war-drawer-label">GAVETA 04</span>
+                <p>Quais efeitos econômicos e sociais foram causados pelas perdas territoriais e limitações militares
+                  impostas à Alemanha?</p>
+                <div class="war-drawer-answer" aria-live="polite"></div>
+              </article>
+
+              <article class="war-drawer" data-drawer="5">
+                <span class="war-drawer-label">GAVETA 05</span>
+                <p>Como as punições do tratado contribuíram para o crescimento do nazismo na década de 1930?</p>
+                <div class="war-drawer-answer" aria-live="polite"></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="war-board" aria-label="Quadro de planejamento">
+            <h3>QUADRO DE PLANEJAMENTO</h3>
+            <div class="war-intel-stack">
+              <article class="war-intel-card" draggable="true" data-doc="3">
+                <span class="war-intel-pin" aria-hidden="true"></span>
+                <p class="war-intel-label">DOC CONFIDENCIAL</p>
+                <p>A Alemanha não participou das negociações centrais. Recebeu condições prontas e foi pressionada a
+                  assinar.</p>
+              </article>
+
+              <article class="war-intel-card" draggable="true" data-doc="4">
+                <span class="war-intel-pin" aria-hidden="true"></span>
+                <p class="war-intel-label">DOC CONFIDENCIAL</p>
+                <p>Perdas territoriais e limites militares atingiram indústria, emprego e autoestima nacional, ampliando
+                  a crise social.</p>
+              </article>
+
+              <article class="war-intel-card" draggable="true" data-doc="1">
+                <span class="war-intel-pin" aria-hidden="true"></span>
+                <p class="war-intel-label">DOC CONFIDENCIAL</p>
+                <p>Wilson defendia paz negociada e cooperação; Clemenceau exigia punições severas e segurança contra
+                  nova agressão alemã.</p>
+              </article>
+
+              <article class="war-intel-card" draggable="true" data-doc="5">
+                <span class="war-intel-pin" aria-hidden="true"></span>
+                <p class="war-intel-label">DOC CONFIDENCIAL</p>
+                <p>Humilhação política, crise econômica e ressentimento coletivo fortaleceram discursos radicais
+                  explorados pelo nazismo.</p>
+              </article>
+
+              <article class="war-intel-card" draggable="true" data-doc="2">
+                <span class="war-intel-pin" aria-hidden="true"></span>
+                <p class="war-intel-label">DOC CONFIDENCIAL</p>
+                <p>O Artigo 231 responsabilizava oficialmente a Alemanha e seus aliados pelos danos da guerra,
+                  justificando reparações.</p>
+              </article>
+            </div>
+
+            <p class="war-status" id="war-status">Arquive os documentos nas gavetas corretas.</p>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="card reveal block-panel" id="desafio" role="tabpanel" hidden>
+      <div class="trench-challenge">
+        <header class="trench-intro">
+          <div class="trench-intro-title">
+            <svg class="challenge-heading-icon" viewBox="0 0 64 64" aria-hidden="true" fill="none"
+              stroke-linecap="round" stroke-linejoin="round">
+              <g stroke="currentColor" stroke-width="3">
+                <path d="M16 48L48 16M48 48L16 16" />
+                <circle cx="20" cy="44" r="2" fill="currentColor" />
+                <circle cx="44" cy="20" r="2" fill="currentColor" />
+                <circle cx="44" cy="44" r="2" fill="currentColor" />
+                <circle cx="20" cy="20" r="2" fill="currentColor" />
+              </g>
+              <path d="M12 34c0-10 9-18 20-18s20 8 20 18c0 2-4 4-20 4s-20-2-20-4z" fill="currentColor"
+                stroke="currentColor" stroke-width="2" />
+              <path d="M32 16v18" stroke="#1c1917" stroke-width="2" opacity="0.4" />
+            </svg>
+            <h2>Desafio: As Trincheiras de Versalhes</h2>
+          </div>
+          <p>
+            Sobreviva ao campo de batalha diplomático. Avance pelas trincheiras respondendo corretamente aos desafios
+            sobre o Tratado de Versalhes e conclua o relatório final.
+          </p>
+        </header>
+
+        <div class="war-score-panel">
+          <strong>Pontuação:</strong> <span id="trench-score">0</span> pontos
+        </div>
+
+        <section class="trench-arena" aria-label="Missão interativa das trincheiras">
+          <div class="trench-progress" aria-label="Progresso da missão">
+            <div class="trench-progress-track" aria-hidden="true"></div>
+            <div class="trench-progress-fill" id="trench-progress-fill" aria-hidden="true"></div>
+            <div class="trench-steps" id="trench-steps" aria-hidden="true">
+              <span class="trench-step trench-step--wire is-active" data-step="1" title="Arame farpado"></span>
+              <span class="trench-step trench-step--tunnel" data-step="2" title="Túnel"></span>
+              <span class="trench-step trench-step--sandbag" data-step="3" title="Sacos de areia"></span>
+              <span class="trench-step trench-step--wire" data-step="4" title="Arame farpado"></span>
+              <span class="trench-step trench-step--tunnel" data-step="5" title="Túnel"></span>
+              <span class="trench-step trench-step--sandbag" data-step="6" title="Sacos de areia"></span>
+              <span class="trench-step trench-step--wire" data-step="7" title="Arame farpado"></span>
+            </div>
+          </div>
+
+          <article class="trench-card">
+            <span class="trench-order" id="trench-order">ORDEM 1/7</span>
+            <h3 id="trench-title">Trincheira 1: A Nova Fronteira</h3>
+            <p id="trench-question">
+              Precisamos confirmar o novo mapa europeu. A Alsácia-Lorena, rica em minérios, foi retirada da Alemanha.
+              Para qual país ela foi devolvida?
+            </p>
+            <div class="trench-options" id="trench-options"></div>
+            <p class="trench-feedback" id="trench-feedback" aria-live="polite"></p>
+            <button class="trench-reset" id="trench-reset" hidden>Reiniciar missão</button>
+          </article>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+  <script src="script.js?v=4" defer></script>
+</body>
+
+</html>

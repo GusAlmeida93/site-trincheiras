@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: trincheiras
+      POSTGRES_PASSWORD: trincheiras
+      POSTGRES_DB: trincheiras
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trincheiras"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build: .
+    ports:
+      - "3000:8080"
+    environment:
+      PORT: 8080
+      DATABASE_URL: postgresql://trincheiras:trincheiras@db:5432/trincheiras
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
