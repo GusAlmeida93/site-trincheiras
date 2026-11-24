@@ -39,6 +39,7 @@ lives in PostgreSQL, and the same engine can host new lessons without code chang
 │                 FastAPI (one container)               │
 │  routers → services (domain boundaries) → SQLAlchemy  │
 │  pages · players · answers · lessons · admin · reports│
+│  auth (teacher accounts) · /admin pages               │
 └──────────────┬────────────────────────────────────────┘
                │ psycopg3
 ┌──────────────▼────────────────────────────────────────┐
@@ -46,6 +47,7 @@ lives in PostgreSQL, and the same engine can host new lessons without code chang
 │  players, answers │ lessons, content_blocks,          │
 │  map_regions/features, activities, questions,         │
 │  question_options, match_documents                    │
+│  admin_users, admin_sessions, login_throttles         │
 │  Schema owned by Alembic; content seeded from fixtures│
 └───────────────────────────────────────────────────────┘
 ```
@@ -63,18 +65,21 @@ services exchange Pydantic schemas/ids only.
 
 | Boundary | Owns | Endpoints | Reuse story |
 | --- | --- | --- | --- |
-| **Player identity** (`services/players.py`) | `players` | `POST /api/v1/players` | Participant registration for any classroom activity |
+| **Player identity** (`services/players.py`) | `players` | `POST /api/v1/players`, `DELETE /api/v1/admin/players/{id}`, `DELETE /api/v1/admin/players?class_group=` | Participant registration for any classroom activity; deleting a student or a class also deletes their answers |
 | **Lesson content** (`services/content.py`) | `lessons`, `content_blocks`, `map_*`, `activities`, `questions`, `question_options`, `match_documents` | `GET /api/v1/lessons/{slug}/bundle`, `PUT/DELETE /api/v1/admin/lessons/...` | CMS-lite lesson engine — a new lesson is new rows + seed fixtures, zero code. One service feeds both the Jinja SSR page and the JSON bundle |
 | **Answer telemetry** (`services/answers.py`) | `answers` | `POST /api/v1/answers` | Generic answer/event collector (question FK, chosen value, correctness, score delta) |
-| **Reporting** (`services/reports.py`) | read-only joins | `GET /api/v1/reports/players`, `/reports/players/{id}/answers`, `/reports/answers` | Teacher-facing read model; the natural first extraction |
+| **Reporting** (`services/reports.py`) | read-only joins | `GET /api/v1/reports/classes`, `/reports/players`, `/reports/players.csv`, `/reports/players/{id}/answers`, `/reports/answers`, `/reports/activities` | Teacher-facing read model; the natural first extraction. Feeds both the JSON API and the `/admin` pages |
+| **Teacher accounts** (`services/accounts.py`) | `admin_users`, `admin_sessions`, `login_throttles` | `POST /api/v1/auth/login`, `/auth/logout`, `/auth/password`, `GET /auth/session` | Invite-only accounts, database-backed sessions, sign-in throttling |
 
 Interactive API docs: `http://localhost:8000/docs` (OpenAPI). The spec is committed at
 [backend/openapi.json](backend/openapi.json) and generates the frontend types
 ([frontend/src/api/types.gen.ts](frontend/src/api/types.gen.ts)) — regenerate with
 `make gen-api`; CI-able drift check via `python -m app.openapi_export --check openapi.json`.
 
-Admin and report endpoints require the `X-Admin-Token` header (matching `ADMIN_TOKEN`).
-With `ADMIN_TOKEN` empty they are disabled outright.
+Admin and report endpoints accept either a signed-in teacher's session cookie or the
+`X-Admin-Token` header (matching `ADMIN_TOKEN`, for scripts). Each is off while its
+setting (`SESSION_SECRET`, `ADMIN_TOKEN`) is empty; see
+[Teacher accounts and the admin area](#teacher-accounts-and-the-admin-area).
 
 ## Project structure
 
@@ -85,17 +90,20 @@ site-trincheiras/
 │   │   ├── main.py               # app factory: routers, templates, static mount
 │   │   ├── config.py             # pydantic-settings (env vars)
 │   │   ├── db.py                 # lazy engine + session dependency
-│   │   ├── security.py           # X-Admin-Token dependency
+│   │   ├── security.py           # who may call admin/report APIs: session cookie or X-Admin-Token
 │   │   ├── vite.py               # vite_asset() Jinja helper (dev server ⇄ manifest)
 │   │   ├── avatars.py            # fixed avatar catalogue (static assets)
 │   │   ├── models/               # SQLAlchemy 2 ORM (one module per domain)
 │   │   ├── schemas/              # Pydantic contracts (API + seed validation)
-│   │   ├── services/             # domain boundaries: players, content, answers, reports
+│   │   ├── services/             # domain boundaries: players, content, answers, reports, accounts
 │   │   ├── routers/              # pages, health, players, answers, lessons, admin, reports,
-│   │   │                         #   ops (migrate/seed, mounted only with OPS_MODE=true)
-│   │   ├── templates/            # base.html + index.html + partials/ (9 sections)
+│   │   │                         #   auth (sign-in), admin_pages (/admin), admin_players (delete),
+│   │   │                         #   ops (migrate/seed/invite, mounted only with OPS_MODE=true)
+│   │   ├── templates/            # base.html + index.html + partials/ (9 sections);
+│   │   │                         #   admin/ = the teacher's area
 │   │   ├── static/               # avatars/, img/; dist/ = Vite output (gitignored)
 │   │   ├── seed/                 # fixtures/*.json + idempotent seed runner
+│   │   ├── invite_admin.py       # `python -m app.invite_admin EMAIL` (local invite)
 │   │   └── openapi_export.py     # spec export without a running server
 │   ├── alembic/                  # migrations (baseline: full schema)
 │   ├── tests/                    # pytest suite (transactional Postgres fixtures)
@@ -103,6 +111,7 @@ site-trincheiras/
 ├── frontend/
 │   ├── src/
 │   │   ├── main.ts               # boot: fetch lesson bundle, init features
+│   │   ├── admin/                # second Vite entry: the teacher's area (/admin)
 │   │   ├── api/                  # typed client + generated OpenAPI types
 │   │   ├── features/             # tabs, enlistment, flip-cards, participants,
 │   │   │                         #   clauses, map, war-room, trench, effects/
@@ -161,14 +170,15 @@ uvicorn. To preview the production asset pipeline locally: `make build`, then ru
 make test       # pytest: API, seed idempotency, SSR pages, admin, reports,
                 #         and a migrations-match-models check (needs `make db`)
 make e2e        # Playwright: builds the image, boots docker-compose.test.yml
-                #         (tmpfs Postgres, :8001), runs 6 specs × 3 browsers
+                #         (tmpfs Postgres, :8001), runs 7 specs × 3 browsers
 make check      # everything a PR should pass (tests + spec drift + types + e2e)
 ```
 
 One-time for e2e: `cd frontend && npx playwright install`.
 
 E2E against an already-running stack: `PW_BASE_URL=http://localhost:8000 npm run e2e`
-(skips compose management; the target needs `APP_ENV=test` for the reset endpoint).
+(skips compose management; the target needs `APP_ENV=test` for the test-support
+endpoints and a `SESSION_SECRET` for the admin spec).
 
 Two checkouts running the suite at once need separate stacks:
 `E2E_PORT=8002 E2E_PROJECT=trincheiras-e2e-2 npm run e2e`.
@@ -186,13 +196,104 @@ Lesson content is data, not code:
 - A new lesson = a new `lessons` row + its blocks/activities (fixtures or API), then
   point `DEFAULT_LESSON_SLUG` at it.
 
+## Teacher accounts and the admin area
+
+Teachers read results and clean up test data at **`/admin`** (pt-BR, server-rendered,
+with its own small bundle from `frontend/src/admin/`):
+
+| Page | What it shows |
+| --- | --- |
+| `/admin` | Classes: students, answers, correct answers, points, last activity |
+| `/admin/turma?nome=9º A` | Students of a class with their scores; **Exportar CSV**; delete a student or the whole class |
+| `/admin/alunos/{id}` | One student: score, totals per activity, every answer |
+| `/admin/atividades` | Per activity and per question: attempts, % correct, students reached (optionally one class) |
+| `/admin/entrar`, `/admin/definir-senha` | Sign in; set a password from an invite link |
+
+Deleting a student or a class removes the players **and their answers**, after a
+confirmation dialog. Editing lesson content stays API-only.
+
+### Accounts
+
+There is no sign-up. An account is created by an operator, and the teacher chooses
+their own password:
+
+```bash
+aws lambda invoke --function-name trincheiras-ops --cli-binary-format raw-in-base64-out \
+  --payload '{"task": "invite-admin", "email": "prof@example.com"}' /dev/stdout
+```
+
+The answer carries `invite.setup_path`, for example `/admin/definir-senha#Zk3…`. Send
+the teacher the site address followed by that path. The link works **once** and expires
+after 48 hours (`"expires_in_hours": 1`–`168` changes that). Running the task again for
+the same e-mail issues a new link and voids the old one: that is also the **password
+reset**. The current password keeps working until the new link is used.
+
+Other account tasks: `{"task": "list-admins"}` and
+`{"task": "deactivate-admin", "email": "…"}` (signs the teacher out everywhere and
+removes the password; inviting again brings the account back).
+
+Locally there is no ops Lambda; the same invite is a command (it needs
+`SESSION_SECRET`, which `docker-compose.yml` sets to a development-only value):
+
+```bash
+docker compose exec app python -m app.invite_admin prof@example.com
+```
+
+```bash
+cd backend && uv run python -m app.invite_admin prof@example.com
+```
+
+The second form (for `make backend`) reads `SESSION_SECRET` from the environment or
+`backend/.env`; it must be the value the server runs with, because a link is only valid
+under the secret that issued it.
+
+### How it is protected
+
+- **Passwords** are hashed with argon2id (`argon2-cffi`, RFC 9106 low-memory profile).
+  At least 10 characters.
+- **Sessions are rows in `admin_sessions`**, not signed cookies. Lambda keeps nothing in
+  memory between requests, and a row can be deleted: signing out ends that browser's
+  session on the server, and setting a new password (or deactivating the account) ends
+  all of them at once. A session lasts `SESSION_HOURS` (12) from sign-in.
+- **Nothing usable is stored.** The cookie value and the invite token are random; the
+  database holds only `HMAC-SHA256(SESSION_SECRET, token)`. The invite token travels in
+  the URL fragment (`#…`), which browsers never send to a server, so it is not in any
+  access log.
+- **The cookie** is `HttpOnly`, `SameSite=Lax`, host-only, and outside local
+  development `Secure` with the `__Host-` prefix.
+- **CSRF.** Every change is a `fetch` with JSON, and a session cookie is only honoured
+  on a non-GET request that also carries `X-Requested-With: trincheiras-admin`. Another
+  site cannot add a custom header without a CORS preflight, which the app never
+  answers. An Origin check was not used because the app cannot know its public address:
+  behind CloudFront it sees the Lambda URL in `Host`, and the site answers on both the
+  `cloudfront.net` name and the custom domain. Requests with `X-Admin-Token` need no
+  extra header.
+- **Sign-in throttling.** Five failed attempts for an e-mail lock that e-mail for 15
+  minutes (counted in `login_throttles`, known account or not). An invite link lifts the
+  lock.
+- **`SESSION_SECRET`** must be set (32+ characters) for any of this to be on. Without it
+  the auth endpoints and `/admin` answer 503 and no cookie is accepted; there is no
+  default. Changing it signs everyone out and voids pending invite links.
+
 ## Teacher reports
+
+The same data as JSON, for scripts. With a browser session no header is needed; with
+curl send the token:
 
 ```bash
 TOKEN=your-admin-token
+curl -H "X-Admin-Token: $TOKEN" 'http://localhost:8000/api/v1/reports/classes'
 curl -H "X-Admin-Token: $TOKEN" 'http://localhost:8000/api/v1/reports/players?class_group=9º A'
 curl -H "X-Admin-Token: $TOKEN" 'http://localhost:8000/api/v1/reports/players/1/answers'
 curl -H "X-Admin-Token: $TOKEN" 'http://localhost:8000/api/v1/reports/answers?activity=trench-mission&limit=50'
+curl -H "X-Admin-Token: $TOKEN" 'http://localhost:8000/api/v1/reports/activities?class_group=9º A'
+curl -H "X-Admin-Token: $TOKEN" -G 'http://localhost:8000/api/v1/reports/players.csv' \
+  --data-urlencode 'class_group=9º A' -o turma.csv   # ";"-separated, UTF-8 with BOM (Excel pt-BR)
+
+# Delete one student, or every student of a class, with their answers:
+curl -X DELETE -H "X-Admin-Token: $TOKEN" 'http://localhost:8000/api/v1/admin/players/1'
+curl -X DELETE -H "X-Admin-Token: $TOKEN" -G 'http://localhost:8000/api/v1/admin/players' \
+  --data-urlencode 'class_group=9º Teste'
 ```
 
 ## Deploying to AWS
@@ -232,7 +333,9 @@ Builds the arm64 image, pushes it to ECR tagged with the commit, runs `terraform
 `{"task": "migrate-and-seed"}`. Both steps are idempotent. Needs `aws` (the `personal`
 profile), `terraform` and Docker.
 
-Other ops tasks: `migrate`, `seed`, `status` (Alembic revision and row counts):
+Other ops tasks: `migrate`, `seed`, `status` (Alembic revision and row counts), and the
+account tasks `invite-admin`, `deactivate-admin`, `list-admins`
+(see [Accounts](#accounts)):
 
 ```bash
 aws lambda invoke --function-name trincheiras-ops --cli-binary-format raw-in-base64-out \
@@ -270,7 +373,9 @@ curl -X PUT https://historiaporaline.com.br/api/v1/admin/lessons/... \
   -d "$BODY"
 ```
 
-`GET` requests need nothing extra.
+`GET` requests need nothing extra, and neither does a `DELETE` without a body. The
+admin pages send the header on every change (for a request without a body, the hash of
+the empty string).
 
 ### Settings that matter on Lambda
 
@@ -280,6 +385,7 @@ curl -X PUT https://historiaporaline.com.br/api/v1/admin/lessons/... \
 | `DB_CONNECT_RETRY_SECONDS` | `45` (web), `120` (ops) | Wait for Aurora to resume instead of failing the request |
 | `AWS_LWA_READINESS_CHECK_PATH` | `/healthz` | Cold starts must not depend on the database |
 | `OPS_MODE` | `true` on `ops` only | Mounts `POST /internal/ops` |
+| `SESSION_SECRET` | generated by Terraform, same on both functions | Turns teacher sign-in on; `ops` issues invite links that `web` must be able to check |
 
 ### One-time bootstrap
 
@@ -326,7 +432,7 @@ ORDER BY a.created_at;
   stores option/document slugs comparable against `question_options.is_correct` /
   `match_documents`); today correctness is client-reported for parity, and correct
   answers ship in the lesson bundle exactly as the legacy site shipped them in JS.
-- Real authentication + an admin UI (the token-gated API is the seam).
+- Editing lesson content in the admin UI (today that is API-only).
 - CI pipeline (GitHub Actions running `make check` + image build).
 - Tab keyboard a11y (arrow-key roving focus), pointer-events drag-and-drop.
 - A second lesson to exercise the content model end-to-end.
