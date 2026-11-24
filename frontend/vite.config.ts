@@ -11,7 +11,9 @@ export default defineConfig(({ command }) => ({
     outDir: '../backend/app/static/dist',
     emptyOutDir: true,
     rollupOptions: {
-      input: 'src/main.ts',
+      // The lesson page and the teacher's area (/admin) are separate entries;
+      // vite_asset() in the backend looks each one up in the manifest.
+      input: ['src/main.ts', 'src/admin/main.ts'],
     },
   },
   server: {

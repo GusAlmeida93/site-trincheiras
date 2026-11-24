@@ -1,0 +1,518 @@
+/* The teacher's area. Same palette as the lesson, none of the theatre: a
+   plain, legible tool for reading results. */
+
+:root {
+  --paper: #f9f3e7;
+  --paper-strong: #f2e4c8;
+  --card: #fffaf0;
+  --ink: #1f2933;
+  --ink-soft: #435163;
+  --line: #d9c9aa;
+  --accent: #a43c2f;
+  --accent-dark: #86291e;
+  --sea: #1f5f6f;
+  --ok: #2f6b3c;
+  --focus: #1f5f6f;
+  --heading: "Special Elite", "Courier Prime", "Courier New", Courier, monospace;
+  --body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--body);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+a {
+  color: var(--sea);
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.75rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin: 2rem 0 0.5rem;
+}
+
+/* ---- top bar ---- */
+
+.admin-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  padding: 0.75rem clamp(1rem, 4vw, 2rem);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.admin-brand {
+  font-family: var(--heading);
+  font-size: 1.2rem;
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.admin-brand span {
+  margin-left: 0.5rem;
+  font-family: var(--body);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--paper-strong);
+}
+
+.admin-nav {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.admin-nav a {
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.admin-nav a:hover {
+  background: rgba(249, 243, 231, 0.14);
+  color: var(--paper);
+}
+
+.admin-nav a[aria-current="page"] {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.admin-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+  font-size: 0.9rem;
+}
+
+.admin-user-email {
+  overflow-wrap: anywhere;
+}
+
+.admin-bar :focus-visible {
+  outline-color: var(--paper);
+}
+
+/* ---- layout ---- */
+
+.admin-main {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 1.5rem clamp(1rem, 4vw, 2rem) 4rem;
+}
+
+.page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.crumbs {
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.lead {
+  margin: 0.25rem 0 0;
+  color: var(--ink-soft);
+}
+
+.hint,
+.empty {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.empty {
+  padding: 2rem 1rem;
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+.strong {
+  font-weight: 700;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.card {
+  padding: 1.5rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.card-narrow {
+  max-width: 26rem;
+  margin: 2rem auto 0;
+}
+
+/* ---- buttons ---- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--ink-soft);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--paper-strong);
+  color: var(--ink);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.btn-primary {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn-primary:hover {
+  background: #101820;
+  color: var(--paper);
+}
+
+.btn-danger {
+  border-color: var(--accent);
+  background: var(--card);
+  color: var(--accent-dark);
+}
+
+.btn-danger:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.confirm .btn-danger {
+  background: var(--accent);
+  color: #fff;
+}
+
+.confirm .btn-danger:hover {
+  background: var(--accent-dark);
+}
+
+.btn-small {
+  min-height: 2rem;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.875rem;
+}
+
+.btn-on-dark {
+  min-height: 2rem;
+  padding: 0.15rem 0.7rem;
+  border-color: var(--paper-strong);
+  background: transparent;
+  color: var(--paper);
+}
+
+.btn-on-dark:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ---- forms ---- */
+
+.form {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 1.25rem;
+}
+
+.form label {
+  margin-top: 0.6rem;
+  font-weight: 600;
+}
+
+.form input,
+.filter select {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--ink-soft);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+
+.form .btn {
+  margin-top: 1rem;
+}
+
+.form .hint {
+  margin: 0;
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter select {
+  width: auto;
+  min-width: 9rem;
+  min-height: 2.5rem;
+}
+
+.notice {
+  margin: 0.75rem 0;
+  padding: 0.65rem 0.85rem;
+  border-left: 4px solid;
+  border-radius: 4px;
+}
+
+.notice-ok {
+  border-color: var(--ok);
+  background: #e6f1e4;
+}
+
+.notice-error {
+  border-color: var(--accent);
+  background: #f8e3df;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---- tables ---- */
+
+.table-wrap {
+  overflow-x: auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.data th,
+.data td {
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.data thead th {
+  background: var(--paper-strong);
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.data tbody th {
+  font-weight: 600;
+}
+
+.data tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.data tbody tr:hover {
+  background: rgba(242, 228, 200, 0.45);
+}
+
+.data .num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.row-actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.tag-ok {
+  background: #e6f1e4;
+  color: var(--ok);
+}
+
+.tag-bad {
+  background: #f8e3df;
+  color: var(--accent-dark);
+}
+
+/* ---- student summary ---- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+}
+
+.stats > div {
+  padding: 0.85rem 1rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.stats dt {
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.stats dd {
+  margin: 0.15rem 0 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats .stat-text,
+.stats .muted {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.stats .stat-text {
+  padding-top: 0.55rem;
+}
+
+.activity + .activity {
+  margin-top: 2.5rem;
+}
+
+.activity h2 {
+  margin-top: 0;
+}
+
+/* ---- confirmation dialog ---- */
+
+.confirm {
+  width: min(28rem, calc(100vw - 2rem));
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--ink);
+}
+
+.confirm::backdrop {
+  background: rgba(24, 17, 12, 0.55);
+}
+
+.confirm h2 {
+  margin: 0 0 0.5rem;
+}
+
+.confirm p {
+  margin: 0.4rem 0;
+}
+
+.confirm-warning {
+  font-weight: 700;
+  color: var(--accent-dark);
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 40rem) {
+  .admin-user {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .data th,
+  .data td {
+    padding: 0.5rem 0.6rem;
+  }
+}
