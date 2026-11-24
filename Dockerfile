@@ -11,6 +11,10 @@ RUN npm run typecheck && npx vite build --outDir=dist
 # ---- Stage 2: Python runtime ----
 FROM python:3.13-slim AS runtime
 COPY --from=ghcr.io/astral-sh/uv:0.11 /uv /uvx /usr/local/bin/
+# AWS Lambda Web Adapter: translates Lambda invocations into plain HTTP
+# requests to uvicorn, so Lambda runs this image unchanged. Lambda starts
+# whatever it finds in /opt/extensions; anywhere else the file is inert.
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:1.1.0 /lambda-adapter /opt/extensions/lambda-adapter
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
     PYTHONUNBUFFERED=1
@@ -31,6 +35,7 @@ RUN chmod +x /entrypoint.sh \
 USER appuser
 ENV PATH="/srv/.venv/bin:$PATH"
 
-# Cloud Run injects PORT (defaults to 8080); the entrypoint honors it.
+# The entrypoint honors PORT (defaults to 8080, which is also where the
+# Lambda Web Adapter looks for the server).
 EXPOSE 8080
 ENTRYPOINT ["/entrypoint.sh"]

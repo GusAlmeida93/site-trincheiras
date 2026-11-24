@@ -43,6 +43,11 @@ def create_app() -> FastAPI:
 
         app.include_router(test_support.router)
 
+    if settings.ops_mode:
+        from app.routers import ops
+
+        app.include_router(ops.router)
+
     @app.middleware("http")
     async def immutable_dist_cache(request: Request, call_next):
         response = await call_next(request)

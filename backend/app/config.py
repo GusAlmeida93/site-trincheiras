@@ -14,6 +14,18 @@ class Settings(BaseSettings):
     # Empty token disables every /api/v1/admin and /api/v1/reports endpoint.
     admin_token: str = ""
     app_env: str = "dev"  # dev | test | prod
+    # False opens one connection per request and closes it afterwards. Lambda
+    # needs that: a frozen sandbox would otherwise hold a pooled connection
+    # open, and Aurora only auto-pauses once no user connection is left.
+    db_pool: bool = True
+    # Seconds one connection attempt may take, and how long to keep retrying
+    # failed attempts overall. A paused Aurora cluster needs ~15 s to resume
+    # (30 s or more after a day asleep); 0 retries nothing.
+    db_connect_timeout: int = 10
+    db_connect_retry_seconds: int = 0
+    # Mounts POST /internal/ops (migrate / seed). Only ever set on the ops
+    # Lambda, which has no public URL and is invoked through IAM.
+    ops_mode: bool = False
     default_lesson_slug: str = "tratado-de-versalhes"
     # e.g. http://localhost:5173 — when set, pages load assets from the Vite dev server.
     vite_dev_server: str = ""

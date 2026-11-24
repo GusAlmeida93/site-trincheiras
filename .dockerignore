@@ -16,3 +16,5 @@ frontend/dist
 frontend/e2e
 frontend/test-results
 frontend/playwright-report
+infra
+.claude

@@ -40,3 +40,9 @@ npm-debug.log*
 
 # Gemini
 .gemini/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
