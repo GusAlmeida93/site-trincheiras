@@ -151,6 +151,18 @@ def delete_map_region(
     db.commit()
 
 
+@router.get("/lessons/{lesson_slug}/activities")
+def list_activities(
+    lesson_slug: str, db: Annotated[Session, Depends(get_db)]
+) -> list[ActivityRead]:
+    """Activities with their answer key (the public bundle carries none)."""
+    lesson = _require_lesson(db, lesson_slug)
+    return [
+        ActivityRead.model_validate(a)
+        for a in content_service.list_activities(db, lesson.id)
+    ]
+
+
 @router.put("/lessons/{lesson_slug}/activities/{slug}")
 def put_activity(
     lesson_slug: str,

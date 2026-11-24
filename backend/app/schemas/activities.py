@@ -102,12 +102,60 @@ class ActivityRead(BaseModel):
     documents: list[MatchDocumentRead]
 
 
+# --- public (student-facing) views -----------------------------------------
+#
+# What the browser gets. Nothing here may reveal a correct answer or let one
+# be inferred: no verdict flags, no pairings, no feedback texts, and no slugs
+# of choices (author-facing names; the seed's doc-N pairs with drawer-N). The
+# free-form activity config stays private too. Choices are identified by id.
+
+
+class PublicQuestionOption(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    position: int
+    label: str
+
+
+class PublicQuestion(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    slug: str
+    kind: Literal["multiple_choice", "match_drawer"]
+    position: int
+    title: str | None
+    prompt: str
+    options: list[PublicQuestionOption]
+
+
+class PublicMatchDocument(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    position: int
+    body: str
+
+
+class PublicActivity(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    slug: str
+    kind: Literal["match", "quiz"]
+    title: str
+    position: int
+    questions: list[PublicQuestion]
+    documents: list[PublicMatchDocument]
+
+
 class LessonBundle(BaseModel):
     """Everything the browser needs to run a lesson's interactive modules."""
 
     lesson: "LessonRead"
     map_regions: list["MapRegionRead"]
-    activities: list[ActivityRead]
+    activities: list[PublicActivity]
 
 
 from app.schemas.content import LessonRead  # noqa: E402

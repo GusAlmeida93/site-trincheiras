@@ -17,8 +17,8 @@ class Answer(Base):
     question_id: Mapped[int] = mapped_column(
         sa.ForeignKey("questions.id", ondelete="RESTRICT"), index=True
     )
-    # Option slug (quiz) or document slug (match). Correctness is client-reported
-    # today; storing the slug keeps server-side re-scoring possible later.
+    # Option slug (quiz) or document slug (match). is_correct and score_delta
+    # are computed by the server when the answer is recorded.
     selected_value: Mapped[str] = mapped_column(sa.Text)
     is_correct: Mapped[bool]
     score_delta: Mapped[int] = mapped_column(default=0)

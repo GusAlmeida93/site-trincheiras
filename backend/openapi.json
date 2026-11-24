@@ -119,14 +119,20 @@
         "type": "object"
       },
       "AnswerCreate": {
+        "additionalProperties": false,
+        "description": "One attempt at a question. The server decides correctness and score.",
         "properties": {
-          "is_correct": {
-            "title": "Is Correct",
-            "type": "boolean"
+          "choice_id": {
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
+            "title": "Choice Id",
+            "type": "integer"
           },
           "player_id": {
             "anyOf": [
               {
+                "maximum": 2147483647.0,
+                "minimum": 1.0,
                 "type": "integer"
               },
               {
@@ -135,78 +141,34 @@
             ],
             "title": "Player Id"
           },
+          "prior_errors": {
+            "default": 0,
+            "minimum": 0.0,
+            "title": "Prior Errors",
+            "type": "integer"
+          },
           "question_id": {
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
             "title": "Question Id",
             "type": "integer"
           },
-          "score_delta": {
-            "default": 0,
-            "title": "Score Delta",
-            "type": "integer"
-          },
-          "selected_value": {
-            "minLength": 1,
-            "title": "Selected Value",
-            "type": "string"
+          "retry": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AnswerRetry"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
           "question_id",
-          "selected_value",
-          "is_correct"
+          "choice_id"
         ],
         "title": "AnswerCreate",
-        "type": "object"
-      },
-      "AnswerRead": {
-        "properties": {
-          "created_at": {
-            "format": "date-time",
-            "title": "Created At",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "is_correct": {
-            "title": "Is Correct",
-            "type": "boolean"
-          },
-          "player_id": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Player Id"
-          },
-          "question_id": {
-            "title": "Question Id",
-            "type": "integer"
-          },
-          "score_delta": {
-            "title": "Score Delta",
-            "type": "integer"
-          },
-          "selected_value": {
-            "title": "Selected Value",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "player_id",
-          "question_id",
-          "selected_value",
-          "is_correct",
-          "score_delta",
-          "created_at"
-        ],
-        "title": "AnswerRead",
         "type": "object"
       },
       "AnswerReportRow": {
@@ -287,6 +249,100 @@
           "created_at"
         ],
         "title": "AnswerReportRow",
+        "type": "object"
+      },
+      "AnswerResult": {
+        "properties": {
+          "choice_id": {
+            "title": "Choice Id",
+            "type": "integer"
+          },
+          "feedback": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Feedback"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "is_correct": {
+            "title": "Is Correct",
+            "type": "boolean"
+          },
+          "player_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Player Id"
+          },
+          "question_id": {
+            "title": "Question Id",
+            "type": "integer"
+          },
+          "score_delta": {
+            "title": "Score Delta",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "player_id",
+          "question_id",
+          "choice_id",
+          "is_correct",
+          "score_delta",
+          "feedback"
+        ],
+        "title": "AnswerResult",
+        "type": "object"
+      },
+      "AnswerRetry": {
+        "additionalProperties": false,
+        "description": "Marks a request as a re-send of an attempt whose response never arrived.\n\nIf the first send did reach the database, the server answers with that\nrecorded answer instead of recording the attempt twice.",
+        "properties": {
+          "after_answer_id": {
+            "anyOf": [
+              {
+                "maximum": 2147483647.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "After Answer Id"
+          },
+          "elapsed_ms": {
+            "maximum": 86400000.0,
+            "minimum": 0.0,
+            "title": "Elapsed Ms",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "elapsed_ms"
+        ],
+        "title": "AnswerRetry",
         "type": "object"
       },
       "ContentBlockRead": {
@@ -393,7 +449,7 @@
         "properties": {
           "activities": {
             "items": {
-              "$ref": "#/components/schemas/ActivityRead"
+              "$ref": "#/components/schemas/PublicActivity"
             },
             "title": "Activities",
             "type": "array"
@@ -1028,6 +1084,162 @@
         "title": "PlayerScoreSummary",
         "type": "object"
       },
+      "PublicActivity": {
+        "properties": {
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/PublicMatchDocument"
+            },
+            "title": "Documents",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "kind": {
+            "enum": [
+              "match",
+              "quiz"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/PublicQuestion"
+            },
+            "title": "Questions",
+            "type": "array"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "kind",
+          "title",
+          "position",
+          "questions",
+          "documents"
+        ],
+        "title": "PublicActivity",
+        "type": "object"
+      },
+      "PublicMatchDocument": {
+        "properties": {
+          "body": {
+            "title": "Body",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "position",
+          "body"
+        ],
+        "title": "PublicMatchDocument",
+        "type": "object"
+      },
+      "PublicQuestion": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "kind": {
+            "enum": [
+              "multiple_choice",
+              "match_drawer"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "options": {
+            "items": {
+              "$ref": "#/components/schemas/PublicQuestionOption"
+            },
+            "title": "Options",
+            "type": "array"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "prompt": {
+            "title": "Prompt",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "kind",
+          "position",
+          "title",
+          "prompt",
+          "options"
+        ],
+        "title": "PublicQuestion",
+        "type": "object"
+      },
+      "PublicQuestionOption": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "position",
+          "label"
+        ],
+        "title": "PublicQuestionOption",
+        "type": "object"
+      },
       "QuestionOptionRead": {
         "properties": {
           "id": {
@@ -1440,6 +1652,69 @@
           }
         },
         "summary": "Put Lesson",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/lessons/{lesson_slug}/activities": {
+      "get": {
+        "description": "Activities with their answer key (the public bundle carries none).",
+        "operationId": "list_activities_api_v1_admin_lessons__lesson_slug__activities_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lesson_slug",
+            "required": true,
+            "schema": {
+              "title": "Lesson Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ActivityRead"
+                  },
+                  "title": "Response List Activities Api V1 Admin Lessons  Lesson Slug  Activities Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Activities",
         "tags": [
           "admin"
         ]
@@ -1930,7 +2205,8 @@
     },
     "/api/v1/answers": {
       "post": {
-        "operationId": "record_answer_api_v1_answers_post",
+        "description": "Judge one attempt and, for an enlisted player, record it.\n\nThe server decides `is_correct` and `score_delta` from the lesson content\nand the activity's scoring rules; the request carries only the choice.",
+        "operationId": "submit_answer_api_v1_answers_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1942,15 +2218,28 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnswerResult"
+                }
+              }
+            },
+            "description": "Judged without recording a new answer: anonymous play, or a retry of an attempt that was already recorded."
+          },
           "201": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AnswerRead"
+                  "$ref": "#/components/schemas/AnswerResult"
                 }
               }
             },
             "description": "Successful Response"
+          },
+          "404": {
+            "description": "Unknown player or question."
           },
           "422": {
             "content": {
@@ -1963,7 +2252,7 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Record Answer",
+        "summary": "Submit Answer",
         "tags": [
           "answers"
         ]
