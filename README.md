@@ -167,6 +167,12 @@ make check      # everything a PR should pass (tests + spec drift + types + e2e)
 
 One-time for e2e: `cd frontend && npx playwright install`.
 
+Every pull request and every push to `main` runs the same gates in GitHub Actions
+([`.github/workflows/ci.yml`](.github/workflows/ci.yml)): pytest, OpenAPI and generated-type
+drift, type checks, the browser suite against the production image, and
+`terraform fmt` / `validate`. CI does not deploy; releases stay a deliberate
+`./infra/deploy.sh`.
+
 E2E against an already-running stack: `PW_BASE_URL=http://localhost:8000 npm run e2e`
 (skips compose management; the target needs `APP_ENV=test` for the reset endpoint).
 
@@ -327,7 +333,6 @@ ORDER BY a.created_at;
   `match_documents`); today correctness is client-reported for parity, and correct
   answers ship in the lesson bundle exactly as the legacy site shipped them in JS.
 - Real authentication + an admin UI (the token-gated API is the seam).
-- CI pipeline (GitHub Actions running `make check` + image build).
 - Pointer-events drag-and-drop (touch screens fall back to click-to-place today).
 - A second lesson to exercise the content model end-to-end.
 
