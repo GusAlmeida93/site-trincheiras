@@ -195,7 +195,7 @@ curl -H "X-Admin-Token: $TOKEN" 'http://localhost:8000/api/v1/reports/answers?ac
 ## Deploying to AWS
 
 Production runs in AWS account `249744179072`, region `us-east-1`, at
-**https://historiaporline.com.br**. Everything is Terraform in [`infra/`](infra/).
+**https://historiaporaline.com.br**. Everything is Terraform in [`infra/`](infra/).
 
 ```
  Browser ──► CloudFront ──signed (SigV4)──► Lambda "web" ──► Aurora Serverless v2
@@ -246,7 +246,7 @@ everything that needs the delegation: while `false`, the site answers only on it
 1. `cd infra && terraform output name_servers` lists four `awsdns` servers.
 2. At registro.br, open the domain → **DNS** → **Alterar servidores DNS** and enter
    those four (no trailing dot). Leave the DS/DNSSEC fields empty.
-3. Once `dig +short NS historiaporline.com.br` returns them, set
+3. Once `dig +short NS historiaporaline.com.br` returns them, set
    `domain_delegated = true` and run `./infra/deploy.sh`. That issues the certificate
    (validated through the zone), attaches the domain to CloudFront, creates the
    `A`/`AAAA` records for the apex and `www`, and redirects `www` to the apex.
@@ -261,7 +261,7 @@ hash is not part of that signature. The frontend sends it automatically
 
 ```bash
 BODY='{"title": "..."}'
-curl -X PUT https://historiaporline.com.br/api/v1/admin/lessons/... \
+curl -X PUT https://historiaporaline.com.br/api/v1/admin/lessons/... \
   -H "X-Admin-Token: $TOKEN" -H 'Content-Type: application/json' \
   -H "x-amz-content-sha256: $(printf %s "$BODY" | shasum -a 256 | cut -d' ' -f1)" \
   -d "$BODY"
