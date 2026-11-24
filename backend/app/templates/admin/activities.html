@@ -1,0 +1,62 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Atividades{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Resumo por atividade</h1>
+    <p class="lead">{% if class_group %}Turma {{ class_group }}{% else %}Todas as turmas{% endif %}</p>
+  </div>
+  {# A GET form carries no body, so it needs no fetch. #}
+  <form class="filter" method="get" action="/admin/atividades">
+    <label for="filter-class">Turma</label>
+    <select id="filter-class" name="turma">
+      <option value="">Todas</option>
+      {% for name in class_groups %}
+      <option value="{{ name }}" {% if name == class_group %}selected{% endif %}>{{ name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn">Filtrar</button>
+  </form>
+</div>
+
+{% for a in activities %}
+<section class="activity" data-activity="{{ a.activity_slug }}">
+  <h2>{{ a.title }}</h2>
+  <p class="lead">
+    {{ a.players_count }} aluno(s) · {{ a.answers_count }} resposta(s) ·
+    {{ a.correct_count }} certa(s) ({{ percent(a.correct_count, a.answers_count) }})
+  </p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead>
+        <tr>
+          <th scope="col">Questão</th>
+          <th scope="col" class="num">Respostas</th>
+          <th scope="col" class="num">Certas</th>
+          <th scope="col" class="num">% de acerto</th>
+          <th scope="col" class="num">Alunos que tentaram</th>
+          <th scope="col" class="num">Alunos que acertaram</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for q in a.questions %}
+        <tr>
+          <th scope="row">{{ q.title or q.prompt|truncate(90) }}</th>
+          <td class="num">{{ q.answers_count }}</td>
+          <td class="num">{{ q.correct_count }}</td>
+          <td class="num">{{ percent(q.correct_count, q.answers_count) }}</td>
+          <td class="num">{{ q.players_count }}</td>
+          <td class="num">{{ q.players_correct_count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% else %}
+<p class="empty">Nenhuma atividade cadastrada.</p>
+{% endfor %}
+<p class="hint">Um aluno pode responder à mesma questão mais de uma vez; “% de acerto” considera todas as tentativas.</p>
+{% endblock %}

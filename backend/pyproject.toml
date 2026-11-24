@@ -12,6 +12,8 @@ dependencies = [
     "psycopg[binary]>=3.2",
     "pydantic>=2.8",
     "pydantic-settings>=2.3",
+    "argon2-cffi>=25.1.0",
+    "tzdata>=2026.3",
 ]
 
 [dependency-groups]

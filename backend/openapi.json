@@ -60,6 +60,52 @@
         "title": "ActivityRead",
         "type": "object"
       },
+      "ActivitySummary": {
+        "properties": {
+          "activity_slug": {
+            "title": "Activity Slug",
+            "type": "string"
+          },
+          "answers_count": {
+            "title": "Answers Count",
+            "type": "integer"
+          },
+          "correct_count": {
+            "title": "Correct Count",
+            "type": "integer"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "players_count": {
+            "title": "Players Count",
+            "type": "integer"
+          },
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/QuestionSummary"
+            },
+            "title": "Questions",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "activity_slug",
+          "title",
+          "kind",
+          "players_count",
+          "answers_count",
+          "correct_count",
+          "questions"
+        ],
+        "title": "ActivitySummary",
+        "type": "object"
+      },
       "ActivityWrite": {
         "properties": {
           "config": {
@@ -215,6 +261,10 @@
             "title": "Activity Slug",
             "type": "string"
           },
+          "activity_title": {
+            "title": "Activity Title",
+            "type": "string"
+          },
           "class_group": {
             "anyOf": [
               {
@@ -265,9 +315,31 @@
             "title": "Question Slug",
             "type": "string"
           },
+          "question_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Question Title"
+          },
           "score_delta": {
             "title": "Score Delta",
             "type": "integer"
+          },
+          "selected_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Selected Label"
           },
           "selected_value": {
             "title": "Selected Value",
@@ -280,13 +352,62 @@
           "player_name",
           "class_group",
           "activity_slug",
+          "activity_title",
           "question_slug",
+          "question_title",
           "selected_value",
+          "selected_label",
           "is_correct",
           "score_delta",
           "created_at"
         ],
         "title": "AnswerReportRow",
+        "type": "object"
+      },
+      "ClassSummary": {
+        "properties": {
+          "answers_count": {
+            "title": "Answers Count",
+            "type": "integer"
+          },
+          "class_group": {
+            "title": "Class Group",
+            "type": "string"
+          },
+          "correct_count": {
+            "title": "Correct Count",
+            "type": "integer"
+          },
+          "last_answer_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Answer At"
+          },
+          "players_count": {
+            "title": "Players Count",
+            "type": "integer"
+          },
+          "total_score": {
+            "title": "Total Score",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "class_group",
+          "players_count",
+          "answers_count",
+          "correct_count",
+          "total_score",
+          "last_answer_at"
+        ],
+        "title": "ClassSummary",
         "type": "object"
       },
       "ContentBlockRead": {
@@ -362,6 +483,24 @@
           "data"
         ],
         "title": "ContentBlockWrite",
+        "type": "object"
+      },
+      "DeletionResult": {
+        "properties": {
+          "answers_deleted": {
+            "title": "Answers Deleted",
+            "type": "integer"
+          },
+          "players_deleted": {
+            "title": "Players Deleted",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "players_deleted",
+          "answers_deleted"
+        ],
+        "title": "DeletionResult",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -506,6 +645,28 @@
           "title"
         ],
         "title": "LessonWrite",
+        "type": "object"
+      },
+      "LoginRequest": {
+        "properties": {
+          "email": {
+            "maxLength": 254,
+            "minLength": 1,
+            "title": "Email",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "LoginRequest",
         "type": "object"
       },
       "MapFeatureRead": {
@@ -890,6 +1051,28 @@
         "title": "Page[AnswerReportRow]",
         "type": "object"
       },
+      "PasswordSetRequest": {
+        "properties": {
+          "password": {
+            "maxLength": 128,
+            "minLength": 10,
+            "title": "Password",
+            "type": "string"
+          },
+          "token": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "password"
+        ],
+        "title": "PasswordSetRequest",
+        "type": "object"
+      },
       "PlayerCreate": {
         "properties": {
           "class_group": {
@@ -1162,6 +1345,56 @@
         "title": "QuestionRead",
         "type": "object"
       },
+      "QuestionSummary": {
+        "properties": {
+          "answers_count": {
+            "title": "Answers Count",
+            "type": "integer"
+          },
+          "correct_count": {
+            "title": "Correct Count",
+            "type": "integer"
+          },
+          "players_correct_count": {
+            "title": "Players Correct Count",
+            "type": "integer"
+          },
+          "players_count": {
+            "title": "Players Count",
+            "type": "integer"
+          },
+          "prompt": {
+            "title": "Prompt",
+            "type": "string"
+          },
+          "question_slug": {
+            "title": "Question Slug",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "question_slug",
+          "title",
+          "prompt",
+          "answers_count",
+          "correct_count",
+          "players_count",
+          "players_correct_count"
+        ],
+        "title": "QuestionSummary",
+        "type": "object"
+      },
       "QuestionWrite": {
         "properties": {
           "feedback_correct": {
@@ -1224,6 +1457,31 @@
           "prompt"
         ],
         "title": "QuestionWrite",
+        "type": "object"
+      },
+      "SessionRead": {
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "SessionRead",
         "type": "object"
       },
       "ValidationError": {
@@ -1928,6 +2186,126 @@
         ]
       }
     },
+    "/api/v1/admin/players": {
+      "delete": {
+        "description": "Deletes every student of one class (exact name) and their answers.\n\n`class_group` is required: there is no way to delete all classes at once.",
+        "operationId": "delete_class_api_v1_admin_players_delete",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "class_group",
+            "required": true,
+            "schema": {
+              "maxLength": 50,
+              "minLength": 1,
+              "title": "Class Group",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletionResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Class",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/players/{player_id}": {
+      "delete": {
+        "description": "Deletes one student together with every answer they recorded.",
+        "operationId": "delete_player_api_v1_admin_players__player_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "player_id",
+            "required": true,
+            "schema": {
+              "title": "Player Id",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletionResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Player",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
     "/api/v1/answers": {
       "post": {
         "operationId": "record_answer_api_v1_answers_post",
@@ -1966,6 +2344,119 @@
         "summary": "Record Answer",
         "tags": [
           "answers"
+        ]
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "description": "Signs a teacher in and sets the session cookie.\n\nNeeds the header `X-Requested-With: trincheiras-admin`. Five failures for\nan e-mail lock it for 15 minutes (429 with Retry-After).",
+        "operationId": "login_api_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Login",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "description": "Ends this browser's session on the server and clears the cookie.",
+        "operationId": "logout_api_v1_auth_logout_post",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Logout",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/password": {
+      "post": {
+        "description": "Redeems a setup link from the invite-admin ops task (first password or reset).\n\n`token` is the part of the link after \"#\". It works once; using it signs\nthe teacher out of every browser.",
+        "operationId": "set_password_api_v1_auth_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordSetRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Set Password",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/session": {
+      "get": {
+        "operationId": "read_session_api_v1_auth_session_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Read Session",
+        "tags": [
+          "auth"
         ]
       }
     },
@@ -2049,6 +2540,76 @@
         "summary": "Create Player",
         "tags": [
           "players"
+        ]
+      }
+    },
+    "/api/v1/reports/activities": {
+      "get": {
+        "description": "Per activity and per question: attempts, correct answers, students reached.",
+        "operationId": "activity_summaries_api_v1_reports_activities_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "class_group",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Class Group"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ActivitySummary"
+                  },
+                  "title": "Response Activity Summaries Api V1 Reports Activities Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Activity Summaries",
+        "tags": [
+          "reports"
         ]
       }
     },
@@ -2156,6 +2717,59 @@
         ]
       }
     },
+    "/api/v1/reports/classes": {
+      "get": {
+        "operationId": "class_summaries_api_v1_reports_classes_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ClassSummary"
+                  },
+                  "title": "Response Class Summaries Api V1 Reports Classes Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Class Summaries",
+        "tags": [
+          "reports"
+        ]
+      }
+    },
     "/api/v1/reports/players": {
       "get": {
         "operationId": "player_scores_api_v1_reports_players_get",
@@ -2220,6 +2834,63 @@
           }
         },
         "summary": "Player Scores",
+        "tags": [
+          "reports"
+        ]
+      }
+    },
+    "/api/v1/reports/players.csv": {
+      "get": {
+        "description": "A class as a spreadsheet: semicolon-separated, UTF-8 with BOM (opens in Excel).",
+        "operationId": "class_csv_api_v1_reports_players_csv_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "class_group",
+            "required": true,
+            "schema": {
+              "maxLength": 50,
+              "minLength": 1,
+              "title": "Class Group",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/csv": {}
+            },
+            "description": "One row per student."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Class Csv",
         "tags": [
           "reports"
         ]

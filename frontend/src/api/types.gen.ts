@@ -110,6 +110,48 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/players": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete Class
+         * @description Deletes every student of one class (exact name) and their answers.
+         *
+         *     `class_group` is required: there is no way to delete all classes at once.
+         */
+        delete: operations["delete_class_api_v1_admin_players_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/players/{player_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete Player
+         * @description Deletes one student together with every answer they recorded.
+         */
+        delete: operations["delete_player_api_v1_admin_players__player_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/answers": {
         parameters: {
             query?: never;
@@ -121,6 +163,89 @@ export interface paths {
         put?: never;
         /** Record Answer */
         post: operations["record_answer_api_v1_answers_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Login
+         * @description Signs a teacher in and sets the session cookie.
+         *
+         *     Needs the header `X-Requested-With: trincheiras-admin`. Five failures for
+         *     an e-mail lock it for 15 minutes (429 with Retry-After).
+         */
+        post: operations["login_api_v1_auth_login_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Logout
+         * @description Ends this browser's session on the server and clears the cookie.
+         */
+        post: operations["logout_api_v1_auth_logout_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set Password
+         * @description Redeems a setup link from the invite-admin ops task (first password or reset).
+         *
+         *     `token` is the part of the link after "#". It works once; using it signs
+         *     the teacher out of every browser.
+         */
+        post: operations["set_password_api_v1_auth_password_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Session */
+        get: operations["read_session_api_v1_auth_session_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -161,6 +286,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/reports/activities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Activity Summaries
+         * @description Per activity and per question: attempts, correct answers, students reached.
+         */
+        get: operations["activity_summaries_api_v1_reports_activities_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/reports/answers": {
         parameters: {
             query?: never;
@@ -178,6 +323,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/reports/classes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Class Summaries */
+        get: operations["class_summaries_api_v1_reports_classes_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/reports/players": {
         parameters: {
             query?: never;
@@ -187,6 +349,26 @@ export interface paths {
         };
         /** Player Scores */
         get: operations["player_scores_api_v1_reports_players_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/players.csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Class Csv
+         * @description A class as a spreadsheet: semicolon-separated, UTF-8 with BOM (opens in Excel).
+         */
+        get: operations["class_csv_api_v1_reports_players_csv_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -254,6 +436,23 @@ export interface components {
             questions: components["schemas"]["QuestionRead"][];
             /** Slug */
             slug: string;
+            /** Title */
+            title: string;
+        };
+        /** ActivitySummary */
+        ActivitySummary: {
+            /** Activity Slug */
+            activity_slug: string;
+            /** Answers Count */
+            answers_count: number;
+            /** Correct Count */
+            correct_count: number;
+            /** Kind */
+            kind: string;
+            /** Players Count */
+            players_count: number;
+            /** Questions */
+            questions: components["schemas"]["QuestionSummary"][];
             /** Title */
             title: string;
         };
@@ -331,6 +530,8 @@ export interface components {
         AnswerReportRow: {
             /** Activity Slug */
             activity_slug: string;
+            /** Activity Title */
+            activity_title: string;
             /** Class Group */
             class_group: string | null;
             /**
@@ -348,10 +549,29 @@ export interface components {
             player_name: string | null;
             /** Question Slug */
             question_slug: string;
+            /** Question Title */
+            question_title: string | null;
             /** Score Delta */
             score_delta: number;
+            /** Selected Label */
+            selected_label: string | null;
             /** Selected Value */
             selected_value: string;
+        };
+        /** ClassSummary */
+        ClassSummary: {
+            /** Answers Count */
+            answers_count: number;
+            /** Class Group */
+            class_group: string;
+            /** Correct Count */
+            correct_count: number;
+            /** Last Answer At */
+            last_answer_at: string | null;
+            /** Players Count */
+            players_count: number;
+            /** Total Score */
+            total_score: number;
         };
         /** ContentBlockRead */
         ContentBlockRead: {
@@ -389,6 +609,13 @@ export interface components {
             position: number;
             /** Slug */
             slug: string;
+        };
+        /** DeletionResult */
+        DeletionResult: {
+            /** Answers Deleted */
+            answers_deleted: number;
+            /** Players Deleted */
+            players_deleted: number;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -453,6 +680,13 @@ export interface components {
             slug: string;
             /** Title */
             title: string;
+        };
+        /** LoginRequest */
+        LoginRequest: {
+            /** Email */
+            email: string;
+            /** Password */
+            password: string;
         };
         /** MapFeatureRead */
         MapFeatureRead: {
@@ -598,6 +832,13 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** PasswordSetRequest */
+        PasswordSetRequest: {
+            /** Password */
+            password: string;
+            /** Token */
+            token: string;
+        };
         /** PlayerCreate */
         PlayerCreate: {
             /** Class Group */
@@ -700,6 +941,23 @@ export interface components {
             /** Title */
             title: string | null;
         };
+        /** QuestionSummary */
+        QuestionSummary: {
+            /** Answers Count */
+            answers_count: number;
+            /** Correct Count */
+            correct_count: number;
+            /** Players Correct Count */
+            players_correct_count: number;
+            /** Players Count */
+            players_count: number;
+            /** Prompt */
+            prompt: string;
+            /** Question Slug */
+            question_slug: string;
+            /** Title */
+            title: string | null;
+        };
         /** QuestionWrite */
         QuestionWrite: {
             /** Feedback Correct */
@@ -725,6 +983,13 @@ export interface components {
             slug: string;
             /** Title */
             title?: string | null;
+        };
+        /** SessionRead */
+        SessionRead: {
+            /** Email */
+            email: string;
+            /** Expires At */
+            expires_at?: string | null;
         };
         /** ValidationError */
         ValidationError: {
@@ -1092,6 +1357,72 @@ export interface operations {
             };
         };
     };
+    delete_class_api_v1_admin_players_delete: {
+        parameters: {
+            query: {
+                class_group: string;
+            };
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeletionResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_player_api_v1_admin_players__player_id__delete: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                player_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeletionResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     record_answer_api_v1_answers_post: {
         parameters: {
             query?: never;
@@ -1121,6 +1452,108 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    login_api_v1_auth_login_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    logout_api_v1_auth_logout_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    set_password_api_v1_auth_password_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordSetRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_session_api_v1_auth_session_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionRead"];
                 };
             };
         };
@@ -1189,6 +1622,39 @@ export interface operations {
             };
         };
     };
+    activity_summaries_api_v1_reports_activities_get: {
+        parameters: {
+            query?: {
+                class_group?: string | null;
+            };
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivitySummary"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_answers_api_v1_reports_answers_get: {
         parameters: {
             query?: {
@@ -1225,6 +1691,37 @@ export interface operations {
             };
         };
     };
+    class_summaries_api_v1_reports_classes_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassSummary"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     player_scores_api_v1_reports_players_get: {
         parameters: {
             query?: {
@@ -1245,6 +1742,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PlayerScoreSummary"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    class_csv_api_v1_reports_players_csv_get: {
+        parameters: {
+            query: {
+                class_group: string;
+            };
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description One row per student. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": unknown;
                 };
             };
             /** @description Validation Error */

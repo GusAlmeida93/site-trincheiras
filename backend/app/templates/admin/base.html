@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#1f2933">
+  <title>{% block title %}Área do professor{% endblock %} · Trincheiras</title>
+  {# In dev, CSS arrives via the Vite module graph; paint the paper colour until then. #}
+  <style>html{background:#f9f3e7}</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+  {{ vite_asset('src/admin/main.ts') }}
+</head>
+
+<body>
+  <header class="admin-bar">
+    <a class="admin-brand" href="/admin">Trincheiras <span>Área do professor</span></a>
+    {% if admin_email %}
+    <nav class="admin-nav" aria-label="Seções">
+      <a href="/admin" {% if section == 'classes' %}aria-current="page"{% endif %}>Turmas</a>
+      <a href="/admin/atividades" {% if section == 'activities' %}aria-current="page"{% endif %}>Atividades</a>
+    </nav>
+    <div class="admin-user">
+      <span class="admin-user-email">{{ admin_email }}</span>
+      <button type="button" id="sign-out" class="btn btn-on-dark">Sair</button>
+    </div>
+    {% endif %}
+  </header>
+
+  <main class="admin-main">
+    <noscript>
+      <p class="notice notice-error">Esta área precisa de JavaScript. Habilite-o no navegador para continuar.</p>
+    </noscript>
+    <p id="flash" class="notice notice-ok" role="status" hidden></p>
+    {% block content %}{% endblock %}
+  </main>
+
+  {% if admin_email %}
+  <dialog id="confirm-dialog" class="confirm" aria-labelledby="confirm-title">
+    <h2 id="confirm-title"></h2>
+    <p id="confirm-text"></p>
+    <p class="confirm-warning">Esta ação não pode ser desfeita.</p>
+    <p id="confirm-error" class="notice notice-error" role="alert" hidden></p>
+    <div class="confirm-actions">
+      <button type="button" id="confirm-cancel" class="btn">Cancelar</button>
+      <button type="button" id="confirm-accept" class="btn btn-danger">Apagar</button>
+    </div>
+  </dialog>
+  {% endif %}
+</body>
+
+</html>

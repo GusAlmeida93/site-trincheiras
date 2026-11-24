@@ -1,0 +1,11 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<section class="card card-narrow">
+  <h1>{{ title }}</h1>
+  <p>{{ text }}</p>
+  {% if admin_email %}<p><a href="/admin">Voltar para Turmas</a></p>{% endif %}
+</section>
+{% endblock %}

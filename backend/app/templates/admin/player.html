@@ -1,0 +1,86 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ player.name }}{% endblock %}
+
+{% block content %}
+<nav class="crumbs" aria-label="Você está em"><a href="/admin">Turmas</a> <span aria-hidden="true">›</span>
+  <a href="/admin/turma?nome={{ player.class_group|urlencode }}">{{ player.class_group }}</a> <span aria-hidden="true">›</span> {{ player.name }}</nav>
+
+<div class="page-head">
+  <div>
+    <h1>{{ player.name }}</h1>
+    <p class="lead">Turma {{ player.class_group }}{% if player.recruit_number %} · Recruta {{ player.recruit_number }}{% endif %}</p>
+  </div>
+  <div class="actions">
+    <button type="button" class="btn btn-danger" id="delete-player"
+      data-delete-url="/api/v1/admin/players/{{ player.player_id }}"
+      data-delete-kind="player"
+      data-confirm-title="Apagar {{ player.name }}?"
+      data-confirm-text="O cadastro e {{ player.answers_count }} resposta(s) deste aluno serão apagados."
+      data-after="/admin/turma?nome={{ player.class_group|urlencode }}">Apagar aluno</button>
+  </div>
+</div>
+
+<dl class="stats">
+  <div><dt>Pontuação</dt><dd id="player-score">{{ player.total_score }}</dd></div>
+  <div><dt>Respostas</dt><dd>{{ player.answers_count }}</dd></div>
+  <div><dt>Acertos</dt><dd>{{ player.correct_count }} <span class="muted">({{ percent(player.correct_count, player.answers_count) }})</span></dd></div>
+  <div><dt>Última resposta</dt><dd class="stat-text">{{ player.last_answer_at|datahora }}</dd></div>
+</dl>
+
+{% if answers %}
+<h2>Por atividade</h2>
+<div class="table-wrap">
+  <table class="data">
+    <thead>
+      <tr>
+        <th scope="col">Atividade</th>
+        <th scope="col" class="num">Respostas</th>
+        <th scope="col" class="num">Acertos</th>
+        <th scope="col" class="num">Pontos</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in by_activity %}
+      <tr>
+        <th scope="row">{{ a.title }}</th>
+        <td class="num">{{ a.answers }}</td>
+        <td class="num">{{ a.correct }}</td>
+        <td class="num strong">{{ a.score }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2>Respostas</h2>
+<div class="table-wrap">
+  <table class="data" id="answers-table">
+    <thead>
+      <tr>
+        <th scope="col">Quando</th>
+        <th scope="col">Atividade</th>
+        <th scope="col">Questão</th>
+        <th scope="col">Resposta</th>
+        <th scope="col">Resultado</th>
+        <th scope="col" class="num">Pontos</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in answers %}
+      <tr>
+        <td class="nowrap">{{ r.created_at|datahora }}</td>
+        <td>{{ r.activity_title }}</td>
+        <td>{{ r.question_title or r.question_slug }}</td>
+        <td>{{ (r.selected_label or r.selected_value)|truncate(140) }}</td>
+        <td>{% if r.is_correct %}<span class="tag tag-ok">Certa</span>{% else %}<span class="tag tag-bad">Errada</span>{% endif %}</td>
+        <td class="num">{{ '%+d' % r.score_delta if r.score_delta else '0' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p class="empty">Este aluno se alistou, mas ainda não respondeu a nenhuma atividade.</p>
+{% endif %}
+{% endblock %}

@@ -14,16 +14,20 @@ from app.models.activity import (
     QuestionOption,
 )
 from app.models.answer import Answer
+from app.models.admin import AdminSession, AdminUser, LoginThrottle
 
 __all__ = [
     "ACTIVITY_KINDS",
     "CONTENT_BLOCK_KINDS",
     "QUESTION_KINDS",
     "Activity",
+    "AdminSession",
+    "AdminUser",
     "Answer",
     "Base",
     "ContentBlock",
     "Lesson",
+    "LoginThrottle",
     "MapFeature",
     "MapRegion",
     "MatchDocument",
