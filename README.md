@@ -170,6 +170,9 @@ One-time for e2e: `cd frontend && npx playwright install`.
 E2E against an already-running stack: `PW_BASE_URL=http://localhost:8000 npm run e2e`
 (skips compose management; the target needs `APP_ENV=test` for the reset endpoint).
 
+Two checkouts running the suite at once need separate stacks:
+`E2E_PORT=8002 E2E_PROJECT=trincheiras-e2e-2 npm run e2e`.
+
 ## Content management
 
 Lesson content is data, not code:

@@ -1,10 +1,12 @@
 import { execSync } from 'node:child_process';
 
+import { composeCommand } from './compose';
+
 export default function globalTeardown(): void {
   if (process.env.PW_BASE_URL) {
     return;
   }
-  execSync('docker compose -f ../docker-compose.test.yml down -v', {
+  execSync(`${composeCommand()} down -v`, {
     stdio: 'inherit',
   });
 }

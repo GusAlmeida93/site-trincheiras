@@ -1,5 +1,7 @@
 # Standalone e2e stack: throwaway tmpfs database, app on :8001 with the
 # test-support router enabled. Driven by Playwright's global setup/teardown.
+# E2E_PORT moves the port and E2E_PROJECT renames the compose project, so two
+# checkouts can run the suite at the same time.
 name: trincheiras-e2e
 
 services:
@@ -20,7 +22,7 @@ services:
   app:
     build: .
     ports:
-      - "8001:8080"
+      - "${E2E_PORT:-8001}:8080"
     environment:
       PORT: 8080
       DATABASE_URL: postgresql+psycopg://trincheiras:trincheiras@db:5432/trincheiras

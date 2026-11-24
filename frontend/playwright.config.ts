@@ -1,8 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
-// Default target: the docker-compose.test.yml stack managed by global-setup.
-// Set PW_BASE_URL to test any already-running stack instead.
-const baseURL = process.env.PW_BASE_URL ?? 'http://localhost:8001';
+// Default target: the docker-compose.test.yml stack managed by global-setup
+// (E2E_PORT moves it off :8001). Set PW_BASE_URL to test any already-running
+// stack instead.
+const baseURL = process.env.PW_BASE_URL ?? `http://localhost:${process.env.E2E_PORT ?? '8001'}`;
 
 export default defineConfig({
   testDir: './e2e',
