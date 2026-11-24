@@ -1,10 +1,13 @@
-import type { ActivityRead } from '../api/types';
-import { readScoringConfig } from '../api/types';
+import type { PublicActivity } from '../api/types';
 import { byId } from '../lib/dom';
-import { postAnswerIfEnlisted } from '../state/player';
+import { judgeAttempt, type Attempt } from '../state/player';
+import { ANSWER_MESSAGES, createRetryButton, watchPending } from './answer-flow';
+import { primeExplosionAudio } from './effects/explosion-audio';
 import { pulseHit, triggerBombExplosion } from './effects/explosion-visual';
 
-export function initWarRoom(activity: ActivityRead): void {
+// The activity itself is server-rendered (drawers and cards carry their ids);
+// the page holds no pairing, so every placement is judged by the server.
+export function initWarRoom(_activity: PublicActivity): void {
   const drawers = document.querySelectorAll<HTMLElement>('.war-drawer');
   const cards = document.querySelectorAll<HTMLElement>('.war-intel-card');
   if (!drawers.length || !cards.length) return;
@@ -13,22 +16,11 @@ export function initWarRoom(activity: ActivityRead): void {
   const scoreEl = byId('war-score');
   const grid = document.querySelector<HTMLElement>('.war-room-grid');
 
-  const scoring = readScoringConfig(activity.config);
-  const questionIdBySlug = new Map(activity.questions.map((q) => [q.slug, q.id]));
-  // docId → its correct drawer id; the pairing never touches the DOM, so the
-  // right answers are not readable from the markup.
-  const correctDrawerByDoc = new Map<number, number>();
-  const docSlugById = new Map<number, string>();
-  for (const doc of activity.documents) {
-    const drawerId = questionIdBySlug.get(doc.correct_question_slug);
-    if (drawerId !== undefined) {
-      correctDrawerByDoc.set(doc.id, drawerId);
-    }
-    docSlugById.set(doc.id, doc.slug);
-  }
-
   let score = 0;
   let selectedCard: HTMLElement | null = null;
+  // True from the placement until the server's verdict has been shown.
+  let busy = false;
+  // Wrong attempts per drawer on this page: the error cap for anonymous play.
   const drawerErrors = new Map<number, number>();
 
   const updateScore = (): void => {
@@ -57,7 +49,83 @@ export function initWarRoom(activity: ActivityRead): void {
     selectedCard = null;
   };
 
+  const submitAttempt = async (
+    card: HTMLElement,
+    drawer: HTMLElement,
+    attempt: Attempt
+  ): Promise<void> => {
+    busy = true;
+    // The card stays highlighted while its placement is being judged.
+    selectedCard = card;
+    card.classList.add('is-selected');
+    const stopWatching = watchPending(
+      () => {
+        drawer.classList.add('is-pending');
+        grid?.classList.add('is-waiting');
+        updateStatus(ANSWER_MESSAGES.checking);
+      },
+      () => updateStatus(ANSWER_MESSAGES.slow)
+    );
+    const outcome = await judgeAttempt(attempt);
+    stopWatching();
+    drawer.classList.remove('is-pending');
+    grid?.classList.remove('is-waiting');
+
+    if (outcome.status !== 'judged') {
+      // No verdict: the score stays as it is, and nothing else can be placed
+      // until this one is settled, so the page never drifts from the server.
+      if (outcome.status === 'rejected') {
+        updateStatus(ANSWER_MESSAGES.rejected);
+      } else {
+        updateStatus(ANSWER_MESSAGES.failed);
+        const retryButton = createRetryButton(() => {
+          updateStatus('');
+          void submitAttempt(card, drawer, attempt);
+        });
+        statusEl?.append(' ', retryButton);
+      }
+      // The status line sits under the board and may be off screen; unlike a
+      // verdict, nothing else on the page shows that the placement is stuck.
+      statusEl?.scrollIntoView({ block: 'nearest' });
+      return;
+    }
+
+    busy = false;
+    const { is_correct: isCorrect, score_delta: scoreDelta } = outcome.result;
+    score += scoreDelta;
+    updateScore();
+
+    if (!isCorrect) {
+      drawerErrors.set(attempt.questionId, (drawerErrors.get(attempt.questionId) ?? 0) + 1);
+
+      drawer.classList.add('is-wrong');
+      triggerBombExplosion(drawer);
+      pulseHit(grid);
+      setTimeout(() => drawer.classList.remove('is-wrong'), 420);
+      updateStatus('Documento incorreto para essa gaveta. Tente novamente.');
+      return;
+    }
+
+    const answerBox = drawer.querySelector<HTMLElement>('.war-drawer-answer');
+    drawer.dataset.filled = 'true';
+    drawer.classList.add('is-correct');
+    if (answerBox) {
+      answerBox.textContent = getCardText(card);
+    }
+    finalizeCard(card);
+    resetCardSelection();
+
+    const completed = document.querySelectorAll('.war-drawer[data-filled="true"]').length;
+    const total = drawers.length;
+    if (completed === total) {
+      updateStatus('Excelente. Todos os relatórios foram arquivados corretamente.');
+    } else {
+      updateStatus(`Relatório arquivado com sucesso. ${completed}/${total} gavetas concluídas.`);
+    }
+  };
+
   const completeArchive = (docId: number, drawerId: number): void => {
+    if (busy) return;
     const card = document.querySelector<HTMLElement>(
       `.war-intel-card[data-doc-id="${docId}"]`
     );
@@ -69,61 +137,14 @@ export function initWarRoom(activity: ActivityRead): void {
       return;
     }
 
-    const isCorrect = correctDrawerByDoc.get(docId) === drawerId;
-    const selectedValue = docSlugById.get(docId) ?? String(docId);
-    const answerBox = drawer.querySelector<HTMLElement>('.war-drawer-answer');
-    let pointsVariation = 0;
-
-    if (!isCorrect) {
-      const errors = drawerErrors.get(drawerId) ?? 0;
-      if (errors < scoring.maxPenalizedErrors) {
-        score += scoring.pointsWrong;
-        pointsVariation = scoring.pointsWrong;
-        updateScore();
-      }
-      drawerErrors.set(drawerId, errors + 1);
-
-      drawer.classList.add('is-wrong');
-      card.classList.add('is-selected');
-      triggerBombExplosion(drawer);
-      pulseHit(grid);
-      setTimeout(() => drawer.classList.remove('is-wrong'), 420);
-      updateStatus('Documento incorreto para essa gaveta. Tente novamente.');
-
-      postAnswerIfEnlisted({
-        question_id: drawerId,
-        selected_value: selectedValue,
-        is_correct: false,
-        score_delta: pointsVariation,
-      });
-      return;
-    }
-
-    pointsVariation = scoring.pointsCorrect;
-    drawer.dataset.filled = 'true';
-    drawer.classList.add('is-correct');
-    if (answerBox) {
-      answerBox.textContent = getCardText(card);
-    }
-    score += pointsVariation;
-    updateScore();
-    finalizeCard(card);
-    resetCardSelection();
-
-    postAnswerIfEnlisted({
-      question_id: drawerId,
-      selected_value: selectedValue,
-      is_correct: true,
-      score_delta: pointsVariation,
+    // The verdict arrives after an await; the sound must be unlocked now,
+    // while the click or drop still counts as a user gesture.
+    primeExplosionAudio();
+    void submitAttempt(card, drawer, {
+      questionId: drawerId,
+      choiceId: docId,
+      priorErrors: drawerErrors.get(drawerId) ?? 0,
     });
-
-    const completed = document.querySelectorAll('.war-drawer[data-filled="true"]').length;
-    const total = drawers.length;
-    if (completed === total) {
-      updateStatus('Excelente. Todos os relatórios foram arquivados corretamente.');
-    } else {
-      updateStatus(`Relatório arquivado com sucesso. ${completed}/${total} gavetas concluídas.`);
-    }
   };
 
   const parseId = (value: string | undefined): number | null => {
@@ -133,7 +154,7 @@ export function initWarRoom(activity: ActivityRead): void {
 
   cards.forEach((card) => {
     card.addEventListener('click', () => {
-      if (card.classList.contains('is-used')) return;
+      if (busy || card.classList.contains('is-used')) return;
 
       const wasSelected = card.classList.contains('is-selected');
       resetCardSelection();
@@ -147,7 +168,7 @@ export function initWarRoom(activity: ActivityRead): void {
     });
 
     card.addEventListener('dragstart', (event) => {
-      if (card.classList.contains('is-used')) {
+      if (busy || card.classList.contains('is-used')) {
         event.preventDefault();
         return;
       }

@@ -64,8 +64,8 @@ services exchange Pydantic schemas/ids only.
 | Boundary | Owns | Endpoints | Reuse story |
 | --- | --- | --- | --- |
 | **Player identity** (`services/players.py`) | `players` | `POST /api/v1/players` | Participant registration for any classroom activity |
-| **Lesson content** (`services/content.py`) | `lessons`, `content_blocks`, `map_*`, `activities`, `questions`, `question_options`, `match_documents` | `GET /api/v1/lessons/{slug}/bundle`, `PUT/DELETE /api/v1/admin/lessons/...` | CMS-lite lesson engine — a new lesson is new rows + seed fixtures, zero code. One service feeds both the Jinja SSR page and the JSON bundle |
-| **Answer telemetry** (`services/answers.py`) | `answers` | `POST /api/v1/answers` | Generic answer/event collector (question FK, chosen value, correctness, score delta) |
+| **Lesson content** (`services/content.py`) | `lessons`, `content_blocks`, `map_*`, `activities`, `questions`, `question_options`, `match_documents` | `GET /api/v1/lessons/{slug}/bundle` (public, no answers), `GET /api/v1/admin/lessons/{slug}/activities` (with the answer key), `PUT/DELETE /api/v1/admin/lessons/...` | CMS-lite lesson engine — a new lesson is new rows + seed fixtures, zero code. One service feeds both the Jinja SSR page and the JSON bundle |
+| **Answers and scoring** (`services/answers.py`, `services/scoring.py`) | `answers` | `POST /api/v1/answers` | Judges an attempt against the lesson content and the activity's scoring rules, and records it for enlisted players (see [Scoring](#scoring)) |
 | **Reporting** (`services/reports.py`) | read-only joins | `GET /api/v1/reports/players`, `/reports/players/{id}/answers`, `/reports/answers` | Teacher-facing read model; the natural first extraction |
 
 Interactive API docs: `http://localhost:8000/docs` (OpenAPI). The spec is committed at
@@ -75,6 +75,60 @@ Interactive API docs: `http://localhost:8000/docs` (OpenAPI). The spec is commit
 
 Admin and report endpoints require the `X-Admin-Token` header (matching `ADMIN_TOKEN`).
 With `ADMIN_TOKEN` empty they are disabled outright.
+
+## Scoring
+
+The server decides whether an answer is right and what it scores. The browser never
+holds the answers.
+
+**What students can read.** The public bundle and the server-rendered page carry the
+questions, the option labels and the document texts, each with its id, and nothing
+else about them: no `is_correct`, no document-to-drawer pairing, no feedback texts, no
+scoring rules, and no slugs of options or documents (slugs are author-facing names; in
+the seed `doc-3` belongs in `drawer-3`). The answer key is available to the teacher
+through `GET /api/v1/admin/lessons/{slug}/activities`.
+
+**The request** says only what was chosen:
+
+```bash
+curl -X POST http://localhost:8000/api/v1/answers -H 'Content-Type: application/json' \
+  -d '{"player_id": 1, "question_id": 6, "choice_id": 17}'
+```
+
+`choice_id` is the id of an option (quiz) or of a document (war room, where
+`question_id` is the drawer). Fields such as `is_correct` or `score_delta` are refused
+with `422`, as is a choice that does not belong to the question; an unknown question
+or player is `404`.
+
+**The response** carries the verdict, and the feedback text when the answer is right:
+
+```json
+{"id": 42, "player_id": 1, "question_id": 6, "choice_id": 17,
+ "is_correct": true, "score_delta": 10, "feedback": "Correto. A Alsácia-Lorena..."}
+```
+
+**Rules** come from the activity's `config` (`points_correct`, `points_wrong`,
+`max_penalized_errors`; defaults 10, -5, 2). A wrong answer costs `points_wrong` until
+the player has made `max_penalized_errors` wrong answers to that question; further
+ones cost nothing. The count runs from the player's last correct answer to the
+question, so replaying an activity starts clean while reloading the page mid-question
+does not.
+
+**Anonymous play** (`player_id` null or absent) is judged by the same rules and is not
+recorded: the response is `200` with `"id": null`, and the score lives only in that
+browser. With no identity to count errors against, the cap uses `prior_errors` from
+the request (wrong attempts already made at the question on that page); for enlisted
+players that field is ignored. `answers.selected_value` still stores the slug of the
+chosen option or document, so reports read as before.
+
+**Slow or failed requests.** The games show a verdict only when the server has given
+one. After 0.4 s they say the answer is being checked, after 5 s that the server is
+slow (the database may be resuming), and on a network error, a timeout or a
+5xx they keep the score as it is and offer "Tentar novamente". The retry sends
+`"retry": {"elapsed_ms": ..., "after_answer_id": ...}`; if the first send did reach
+the database, the server returns that recorded answer with `200` instead of recording
+the attempt twice. Requests for the same player and question are serialized with a
+PostgreSQL advisory lock, so the error count and the retry lookup cannot race.
 
 ## Project structure
 
@@ -161,7 +215,7 @@ uvicorn. To preview the production asset pipeline locally: `make build`, then ru
 make test       # pytest: API, seed idempotency, SSR pages, admin, reports,
                 #         and a migrations-match-models check (needs `make db`)
 make e2e        # Playwright: builds the image, boots docker-compose.test.yml
-                #         (tmpfs Postgres, :8001), runs 6 specs × 3 browsers
+                #         (tmpfs Postgres, :8001), runs 7 specs × 3 browsers
 make check      # everything a PR should pass (tests + spec drift + types + e2e)
 ```
 
@@ -315,6 +369,7 @@ docker compose exec db psql -U trincheiras -d trincheiras
 SELECT * FROM players;
 
 -- answers with player and question context
+-- (is_correct and score_delta are computed by the server; anonymous play is not stored)
 SELECT p.name, p.class_group, a2.slug AS activity, q.slug AS question,
        a.selected_value, a.is_correct, a.score_delta, a.created_at
 FROM answers a
@@ -328,10 +383,6 @@ ORDER BY a.created_at;
 
 ## Follow-ups (deliberately out of scope)
 
-- **Server-side scoring** — the schema already supports it (`answers.selected_value`
-  stores option/document slugs comparable against `question_options.is_correct` /
-  `match_documents`); today correctness is client-reported for parity, and correct
-  answers ship in the lesson bundle exactly as the legacy site shipped them in JS.
 - Real authentication + an admin UI (the token-gated API is the seam).
 - Pointer-events drag-and-drop (touch screens fall back to click-to-place today).
 - A second lesson to exercise the content model end-to-end.

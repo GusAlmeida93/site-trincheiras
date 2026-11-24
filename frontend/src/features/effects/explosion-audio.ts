@@ -34,6 +34,18 @@ function getBlastNoiseBuffer(context: AudioContext): AudioBuffer {
   return blastNoiseBuffer;
 }
 
+/**
+ * Creates and resumes the audio context. Browsers only allow that inside a
+ * user gesture, and the explosion now plays after a network round trip, so
+ * the games call this from the click or drop handler itself.
+ */
+export function primeExplosionAudio(): void {
+  const context = getBlastAudioContext();
+  if (context?.state === 'suspended') {
+    context.resume().catch(() => {});
+  }
+}
+
 export function playExplosionSound(): void {
   const context = getBlastAudioContext();
   if (!context) return;

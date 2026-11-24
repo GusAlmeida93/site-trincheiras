@@ -2934,6 +2934,16 @@ details p {
   background: rgba(122, 92, 86, 0.86);
 }
 
+/* A placement whose verdict is taking long (see features/answer-flow.ts). */
+.war-drawer.is-pending {
+  border-color: #d8c296;
+}
+
+.war-room-grid.is-waiting .war-drawer,
+.war-room-grid.is-waiting .war-intel-card {
+  cursor: progress;
+}
+
 .war-drawer-label {
   display: inline-block;
   border: 1px solid #d6c8aa;
@@ -3318,6 +3328,34 @@ details p {
 .trench-option-btn:disabled {
   cursor: default;
   opacity: 0.9;
+}
+
+/* An answer whose verdict is taking long (see features/answer-flow.ts). */
+.trench-option-btn.is-pending {
+  filter: brightness(1.12);
+  box-shadow: 0 0 0 2px rgba(245, 232, 211, 0.6);
+}
+
+.trench-options.is-waiting .trench-option-btn {
+  cursor: progress;
+}
+
+/* "Tentar novamente", shown inline after a failed answer request in the
+   trench feedback line and the war-room status line. */
+.answer-retry {
+  margin-left: 0.4rem;
+  border: 1px solid #7f5d3f;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #a57e56, #8f6a47);
+  color: #f8edd7;
+  padding: 0.3rem 0.66rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.answer-retry:hover {
+  filter: brightness(1.06);
 }
 
 .trench-feedback {

@@ -30,8 +30,7 @@
         <h3>QUADRO DE PLANEJAMENTO</h3>
         <div class="war-intel-stack">
           {% for document in war_room.documents %}
-          <article class="war-intel-card" draggable="true" data-doc-id="{{ document.id }}"
-            data-doc-slug="{{ document.slug }}">
+          <article class="war-intel-card" draggable="true" data-doc-id="{{ document.id }}">
             <span class="war-intel-pin" aria-hidden="true"></span>
             <p class="war-intel-label">DOC CONFIDENCIAL</p>
             <p class="war-intel-body">{{ document.body }}</p>

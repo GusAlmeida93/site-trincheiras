@@ -108,3 +108,39 @@ def player(client: TestClient) -> dict:
     )
     assert response.status_code == 201
     return response.json()
+
+
+class AnswerKey:
+    """Ids and right answers of the seeded activities, read through the admin API.
+
+    The public bundle carries no slugs of choices and no answers, so tests
+    that need "the option trench-1-opt-2" resolve it here.
+    """
+
+    def __init__(self, activities: list[dict]) -> None:
+        self.activities = {a["slug"]: a for a in activities}
+        self.questions = {q["slug"]: q for a in activities for q in a["questions"]}
+        self.options = {
+            o["slug"]: o for q in self.questions.values() for o in q["options"]
+        }
+        self.documents = {d["slug"]: d for a in activities for d in a["documents"]}
+
+    def question_id(self, slug: str) -> int:
+        return self.questions[slug]["id"]
+
+    def option_id(self, slug: str) -> int:
+        return self.options[slug]["id"]
+
+    def document_id(self, slug: str) -> int:
+        return self.documents[slug]["id"]
+
+
+@pytest.fixture()
+def answer_key(
+    client: TestClient, seeded_content: dict[str, int], admin_headers: dict[str, str]
+) -> AnswerKey:
+    response = client.get(
+        "/api/v1/admin/lessons/tratado-de-versalhes/activities", headers=admin_headers
+    )
+    assert response.status_code == 200
+    return AnswerKey(response.json())

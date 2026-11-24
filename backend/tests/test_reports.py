@@ -2,14 +2,8 @@ import pytest
 
 
 @pytest.fixture()
-def played_session(client, seeded_content):
+def played_session(client, answer_key):
     """Two players in different classes with a few answers each."""
-    bundle = client.get("/api/v1/lessons/tratado-de-versalhes/bundle").json()
-    trench = next(a for a in bundle["activities"] if a["slug"] == "trench-mission")
-    war = next(a for a in bundle["activities"] if a["slug"] == "war-room")
-    q1, q2 = trench["questions"][0], trench["questions"][1]
-    drawer = war["questions"][0]
-
     ana = client.post(
         "/api/v1/players", json={"name": "Ana Souza", "class_group": "9º A"}
     ).json()
@@ -17,23 +11,22 @@ def played_session(client, seeded_content):
         "/api/v1/players", json={"name": "Bia Lima", "class_group": "9º B"}
     ).json()
 
-    def answer(player, question, value, correct, delta):
+    def answer(player, question_slug, choice_id):
         response = client.post(
             "/api/v1/answers",
             json={
                 "player_id": player["id"],
-                "question_id": question["id"],
-                "selected_value": value,
-                "is_correct": correct,
-                "score_delta": delta,
+                "question_id": answer_key.question_id(question_slug),
+                "choice_id": choice_id,
             },
         )
         assert response.status_code == 201
 
-    answer(ana, q1, "trench-1-opt-1", False, -5)
-    answer(ana, q1, "trench-1-opt-2", True, 10)
-    answer(ana, q2, "trench-2-opt-1", True, 10)
-    answer(bia, drawer, "doc-1", True, 10)
+    # The server scores these: -5, +10, +10 for Ana and +10 for Bia.
+    answer(ana, "trench-1", answer_key.option_id("trench-1-opt-1"))
+    answer(ana, "trench-1", answer_key.option_id("trench-1-opt-2"))
+    answer(ana, "trench-2", answer_key.option_id("trench-2-opt-1"))
+    answer(bia, "drawer-1", answer_key.document_id("doc-1"))
     return {"ana": ana, "bia": bia}
 
 

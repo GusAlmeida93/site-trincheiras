@@ -107,9 +107,8 @@ def test_delete_content_block(client, seeded_content, admin_headers):
     assert client.delete(url, headers=admin_headers).status_code == 404
 
 
-def test_activity_update_preserves_question_ids(client, seeded_content, admin_headers):
-    bundle = client.get(f"/api/v1/lessons/{LESSON}/bundle").json()
-    trench = next(a for a in bundle["activities"] if a["slug"] == "trench-mission")
+def test_activity_update_preserves_question_ids(client, answer_key, admin_headers):
+    trench = answer_key.activities["trench-mission"]
     original_ids = {q["slug"]: q["id"] for q in trench["questions"]}
 
     payload = {
@@ -151,20 +150,18 @@ def test_activity_update_preserves_question_ids(client, seeded_content, admin_he
     assert all(q["prompt"].endswith("(rev. 2)") for q in updated["questions"])
 
 
-def test_removing_answered_question_conflicts(client, seeded_content, admin_headers, player):
-    bundle = client.get(f"/api/v1/lessons/{LESSON}/bundle").json()
-    trench = next(a for a in bundle["activities"] if a["slug"] == "trench-mission")
+def test_removing_answered_question_conflicts(client, answer_key, admin_headers, player):
+    trench = answer_key.activities["trench-mission"]
     first = trench["questions"][0]
-    client.post(
+    recorded = client.post(
         "/api/v1/answers",
         json={
             "player_id": player["id"],
             "question_id": first["id"],
-            "selected_value": "trench-1-opt-2",
-            "is_correct": True,
-            "score_delta": 10,
+            "choice_id": answer_key.option_id("trench-1-opt-2"),
         },
     )
+    assert recorded.status_code == 201
 
     payload = {
         "slug": "trench-mission",
@@ -203,18 +200,16 @@ def test_removing_answered_question_conflicts(client, seeded_content, admin_head
     assert response.status_code == 409
 
 
-def test_delete_lesson_with_answers_conflicts(client, seeded_content, admin_headers, player):
-    bundle = client.get(f"/api/v1/lessons/{LESSON}/bundle").json()
-    question_id = bundle["activities"][0]["questions"][0]["id"]
-    client.post(
+def test_delete_lesson_with_answers_conflicts(client, answer_key, admin_headers, player):
+    recorded = client.post(
         "/api/v1/answers",
         json={
             "player_id": player["id"],
-            "question_id": question_id,
-            "selected_value": "doc-1",
-            "is_correct": True,
+            "question_id": answer_key.question_id("drawer-1"),
+            "choice_id": answer_key.document_id("doc-1"),
         },
     )
+    assert recorded.status_code == 201
     response = client.delete(f"/api/v1/admin/lessons/{LESSON}", headers=admin_headers)
     assert response.status_code == 409
 

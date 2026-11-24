@@ -39,6 +39,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/lessons/{lesson_slug}/activities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Activities
+         * @description Activities with their answer key (the public bundle carries none).
+         */
+        get: operations["list_activities_api_v1_admin_lessons__lesson_slug__activities_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/lessons/{lesson_slug}/activities/{slug}": {
         parameters: {
             query?: never;
@@ -119,8 +139,14 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Record Answer */
-        post: operations["record_answer_api_v1_answers_post"];
+        /**
+         * Submit Answer
+         * @description Judge one attempt and, for an enlisted player, record it.
+         *
+         *     The server decides `is_correct` and `score_delta` from the lesson content
+         *     and the activity's scoring rules; the request carries only the choice.
+         */
+        post: operations["submit_answer_api_v1_answers_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -291,41 +317,23 @@ export interface components {
             /** Title */
             title: string;
         };
-        /** AnswerCreate */
+        /**
+         * AnswerCreate
+         * @description One attempt at a question. The server decides correctness and score.
+         */
         AnswerCreate: {
-            /** Is Correct */
-            is_correct: boolean;
+            /** Choice Id */
+            choice_id: number;
             /** Player Id */
             player_id?: number | null;
-            /** Question Id */
-            question_id: number;
             /**
-             * Score Delta
+             * Prior Errors
              * @default 0
              */
-            score_delta: number;
-            /** Selected Value */
-            selected_value: string;
-        };
-        /** AnswerRead */
-        AnswerRead: {
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /** Id */
-            id: number;
-            /** Is Correct */
-            is_correct: boolean;
-            /** Player Id */
-            player_id: number | null;
+            prior_errors: number;
             /** Question Id */
             question_id: number;
-            /** Score Delta */
-            score_delta: number;
-            /** Selected Value */
-            selected_value: string;
+            retry?: components["schemas"]["AnswerRetry"] | null;
         };
         /** AnswerReportRow */
         AnswerReportRow: {
@@ -352,6 +360,36 @@ export interface components {
             score_delta: number;
             /** Selected Value */
             selected_value: string;
+        };
+        /** AnswerResult */
+        AnswerResult: {
+            /** Choice Id */
+            choice_id: number;
+            /** Feedback */
+            feedback: string | null;
+            /** Id */
+            id: number | null;
+            /** Is Correct */
+            is_correct: boolean;
+            /** Player Id */
+            player_id: number | null;
+            /** Question Id */
+            question_id: number;
+            /** Score Delta */
+            score_delta: number;
+        };
+        /**
+         * AnswerRetry
+         * @description Marks a request as a re-send of an attempt whose response never arrived.
+         *
+         *     If the first send did reach the database, the server answers with that
+         *     recorded answer instead of recording the attempt twice.
+         */
+        AnswerRetry: {
+            /** After Answer Id */
+            after_answer_id?: number | null;
+            /** Elapsed Ms */
+            elapsed_ms: number;
         };
         /** ContentBlockRead */
         ContentBlockRead: {
@@ -409,7 +447,7 @@ export interface components {
          */
         LessonBundle: {
             /** Activities */
-            activities: components["schemas"]["ActivityRead"][];
+            activities: components["schemas"]["PublicActivity"][];
             lesson: components["schemas"]["LessonRead"];
             /** Map Regions */
             map_regions: components["schemas"]["MapRegionRead"][];
@@ -642,6 +680,64 @@ export interface components {
             /** Total Score */
             total_score: number;
         };
+        /** PublicActivity */
+        PublicActivity: {
+            /** Documents */
+            documents: components["schemas"]["PublicMatchDocument"][];
+            /** Id */
+            id: number;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "match" | "quiz";
+            /** Position */
+            position: number;
+            /** Questions */
+            questions: components["schemas"]["PublicQuestion"][];
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+        };
+        /** PublicMatchDocument */
+        PublicMatchDocument: {
+            /** Body */
+            body: string;
+            /** Id */
+            id: number;
+            /** Position */
+            position: number;
+        };
+        /** PublicQuestion */
+        PublicQuestion: {
+            /** Id */
+            id: number;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "multiple_choice" | "match_drawer";
+            /** Options */
+            options: components["schemas"]["PublicQuestionOption"][];
+            /** Position */
+            position: number;
+            /** Prompt */
+            prompt: string;
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string | null;
+        };
+        /** PublicQuestionOption */
+        PublicQuestionOption: {
+            /** Id */
+            id: number;
+            /** Label */
+            label: string;
+            /** Position */
+            position: number;
+        };
         /** QuestionOptionRead */
         QuestionOptionRead: {
             /** Id */
@@ -835,6 +931,39 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_activities_api_v1_admin_lessons__lesson_slug__activities_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                lesson_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivityRead"][];
+                };
             };
             /** @description Validation Error */
             422: {
@@ -1092,7 +1221,7 @@ export interface operations {
             };
         };
     };
-    record_answer_api_v1_answers_post: {
+    submit_answer_api_v1_answers_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -1105,14 +1234,30 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Judged without recording a new answer: anonymous play, or a retry of an attempt that was already recorded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnswerResult"];
+                };
+            };
             /** @description Successful Response */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AnswerRead"];
+                    "application/json": components["schemas"]["AnswerResult"];
                 };
+            };
+            /** @description Unknown player or question. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

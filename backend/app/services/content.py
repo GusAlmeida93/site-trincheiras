@@ -22,7 +22,7 @@ from app.models import (
     Question,
     QuestionOption,
 )
-from app.schemas.activities import ActivityRead, ActivityWrite, LessonBundle
+from app.schemas.activities import ActivityWrite, LessonBundle, PublicActivity
 from app.schemas.content import (
     ContentBlockRead,
     ContentBlockWrite,
@@ -318,7 +318,13 @@ def _load_activities(session: Session, lesson_id: int) -> list[Activity]:
     )
 
 
+def list_activities(session: Session, lesson_id: int) -> list[Activity]:
+    """Full activities, answers included. Admin use only."""
+    return _load_activities(session, lesson_id)
+
+
 def get_lesson_bundle(session: Session, lesson_slug: str) -> LessonBundle | None:
+    """The student-facing bundle: activities without their answers."""
     lesson = get_lesson_by_slug(session, lesson_slug)
     if lesson is None or not lesson.is_published:
         return None
@@ -328,7 +334,7 @@ def get_lesson_bundle(session: Session, lesson_slug: str) -> LessonBundle | None
             MapRegionRead.model_validate(r) for r in _load_map_regions(session, lesson.id)
         ],
         activities=[
-            ActivityRead.model_validate(a) for a in _load_activities(session, lesson.id)
+            PublicActivity.model_validate(a) for a in _load_activities(session, lesson.id)
         ],
     )
 
@@ -342,8 +348,9 @@ class DisplayContent:
     participants: list[ContentBlockRead]
     clauses: list[ContentBlockRead]
     map_regions: list[MapRegionRead]
-    war_room: ActivityRead | None
-    trench: ActivityRead | None
+    # Public views: the page is as student-facing as the bundle.
+    war_room: PublicActivity | None
+    trench: PublicActivity | None
 
 
 def get_display_content(session: Session, lesson_slug: str) -> DisplayContent | None:

@@ -30,6 +30,17 @@ def test_index_renders_seeded_content(client, seeded_content):
     assert "@vite/client" in html
 
 
+def test_index_gives_no_answers_away(client, answer_key):
+    html = client.get("/").text
+
+    assert "data-doc-id=" in html  # the cards are there...
+    for slug in answer_key.documents:  # ...without the slugs that pair them
+        assert slug not in html
+    for question in answer_key.questions.values():
+        if question["feedback_correct"]:
+            assert question["feedback_correct"] not in html
+
+
 def test_index_503_when_not_seeded(client):
     response = client.get("/")
     assert response.status_code == 503
