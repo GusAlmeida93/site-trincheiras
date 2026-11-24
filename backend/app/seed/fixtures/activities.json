@@ -1,0 +1,302 @@
+[
+  {
+    "slug": "war-room",
+    "kind": "match",
+    "title": "Sala de Comando de Guerra",
+    "position": 0,
+    "config": {
+      "points_correct": 10,
+      "points_wrong": -5,
+      "max_penalized_errors": 2
+    },
+    "questions": [
+      {
+        "slug": "drawer-1",
+        "kind": "match_drawer",
+        "position": 0,
+        "title": "GAVETA 01",
+        "prompt": "Qual era a principal diferença entre a visão de Woodrow Wilson (EUA) e a de Georges Clemenceau (França) na Conferência de Paz?",
+        "feedback_correct": null,
+        "options": []
+      },
+      {
+        "slug": "drawer-2",
+        "kind": "match_drawer",
+        "position": 1,
+        "title": "GAVETA 02",
+        "prompt": "O que determinava a \"Cláusula de Culpa\" (Artigo 231) do Tratado de Versalhes?",
+        "feedback_correct": null,
+        "options": []
+      },
+      {
+        "slug": "drawer-3",
+        "kind": "match_drawer",
+        "position": 2,
+        "title": "GAVETA 03",
+        "prompt": "Por que muitos historiadores e os próprios alemães chamam o Tratado de Versalhes de \"um ditado\" (Diktat)?",
+        "feedback_correct": null,
+        "options": []
+      },
+      {
+        "slug": "drawer-4",
+        "kind": "match_drawer",
+        "position": 3,
+        "title": "GAVETA 04",
+        "prompt": "Quais efeitos econômicos e sociais foram causados pelas perdas territoriais e limitações militares impostas à Alemanha?",
+        "feedback_correct": null,
+        "options": []
+      },
+      {
+        "slug": "drawer-5",
+        "kind": "match_drawer",
+        "position": 4,
+        "title": "GAVETA 05",
+        "prompt": "Como as punições do tratado contribuíram para o crescimento do nazismo na década de 1930?",
+        "feedback_correct": null,
+        "options": []
+      }
+    ],
+    "documents": [
+      {
+        "slug": "doc-3",
+        "body": "A Alemanha não participou das negociações centrais. Recebeu condições prontas e foi pressionada a assinar.",
+        "position": 0,
+        "correct_question_slug": "drawer-3"
+      },
+      {
+        "slug": "doc-4",
+        "body": "Perdas territoriais e limites militares atingiram indústria, emprego e autoestima nacional, ampliando a crise social.",
+        "position": 1,
+        "correct_question_slug": "drawer-4"
+      },
+      {
+        "slug": "doc-1",
+        "body": "Wilson defendia paz negociada e cooperação; Clemenceau exigia punições severas e segurança contra nova agressão alemã.",
+        "position": 2,
+        "correct_question_slug": "drawer-1"
+      },
+      {
+        "slug": "doc-5",
+        "body": "Humilhação política, crise econômica e ressentimento coletivo fortaleceram discursos radicais explorados pelo nazismo.",
+        "position": 3,
+        "correct_question_slug": "drawer-5"
+      },
+      {
+        "slug": "doc-2",
+        "body": "O Artigo 231 responsabilizava oficialmente a Alemanha e seus aliados pelos danos da guerra, justificando reparações.",
+        "position": 4,
+        "correct_question_slug": "drawer-2"
+      }
+    ]
+  },
+  {
+    "slug": "trench-mission",
+    "kind": "quiz",
+    "title": "Desafio: As Trincheiras de Versalhes",
+    "position": 1,
+    "config": {
+      "points_correct": 10,
+      "points_wrong": -5,
+      "max_penalized_errors": 2
+    },
+    "questions": [
+      {
+        "slug": "trench-1",
+        "kind": "multiple_choice",
+        "position": 0,
+        "title": "Trincheira 1: A Nova Fronteira",
+        "prompt": "A Alsácia-Lorena, rica em minérios e indústria siderúrgica, foi retirada da Alemanha. Para qual país ela foi devolvida?",
+        "feedback_correct": "Correto. A Alsácia-Lorena voltou para a França pelo Tratado de Versalhes.",
+        "options": [
+          {
+            "slug": "trench-1-opt-1",
+            "position": 0,
+            "label": "Polônia",
+            "is_correct": false
+          },
+          {
+            "slug": "trench-1-opt-2",
+            "position": 1,
+            "label": "França",
+            "is_correct": true
+          },
+          {
+            "slug": "trench-1-opt-3",
+            "position": 2,
+            "label": "Áustria",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "slug": "trench-2",
+        "kind": "multiple_choice",
+        "position": 1,
+        "title": "Trincheira 2: O Peso da Culpa",
+        "prompt": "Qual artigo declarou que a Alemanha e seus aliados eram responsáveis pelos danos da guerra?",
+        "feedback_correct": "Certo. O Artigo 231 ficou conhecido como a Cláusula de Culpa.",
+        "options": [
+          {
+            "slug": "trench-2-opt-1",
+            "position": 0,
+            "label": "Artigo 231",
+            "is_correct": true
+          },
+          {
+            "slug": "trench-2-opt-2",
+            "position": 1,
+            "label": "Artigo 14",
+            "is_correct": false
+          },
+          {
+            "slug": "trench-2-opt-3",
+            "position": 2,
+            "label": "Artigo 51",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "slug": "trench-3",
+        "kind": "multiple_choice",
+        "position": 2,
+        "title": "Trincheira 3: Exército Reduzido",
+        "prompt": "Após o tratado, qual limite foi imposto ao exército alemão?",
+        "feedback_correct": "Exato. A Alemanha ficou limitada a 100 mil soldados.",
+        "options": [
+          {
+            "slug": "trench-3-opt-1",
+            "position": 0,
+            "label": "500 mil soldados",
+            "is_correct": false
+          },
+          {
+            "slug": "trench-3-opt-2",
+            "position": 1,
+            "label": "250 mil soldados",
+            "is_correct": false
+          },
+          {
+            "slug": "trench-3-opt-3",
+            "position": 2,
+            "label": "100 mil soldados",
+            "is_correct": true
+          }
+        ]
+      },
+      {
+        "slug": "trench-4",
+        "kind": "multiple_choice",
+        "position": 3,
+        "title": "Trincheira 4: Reparações",
+        "prompt": "As reparações exigidas da Alemanha tinham qual objetivo principal para os vencedores?",
+        "feedback_correct": "Isso mesmo. As reparações foram apresentadas como compensação pelos danos da guerra.",
+        "options": [
+          {
+            "slug": "trench-4-opt-1",
+            "position": 0,
+            "label": "Financiar reconstrução dos países atingidos",
+            "is_correct": true
+          },
+          {
+            "slug": "trench-4-opt-2",
+            "position": 1,
+            "label": "Criar uma aliança militar entre Alemanha e França",
+            "is_correct": false
+          },
+          {
+            "slug": "trench-4-opt-3",
+            "position": 2,
+            "label": "Expandir o território alemão na Europa Central",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "slug": "trench-5",
+        "kind": "multiple_choice",
+        "position": 4,
+        "title": "Trincheira 5: Paris 1919",
+        "prompt": "Por que muitos historiadores afirmam que a Alemanha assinou um 'Diktat'?",
+        "feedback_correct": "Perfeito. O tratado foi imposto sem participação equilibrada da Alemanha.",
+        "options": [
+          {
+            "slug": "trench-5-opt-1",
+            "position": 0,
+            "label": "Porque a Alemanha escreveu as cláusulas junto com os vencedores",
+            "is_correct": false
+          },
+          {
+            "slug": "trench-5-opt-2",
+            "position": 1,
+            "label": "Porque recebeu as condições quase prontas, com pouca negociação real",
+            "is_correct": true
+          },
+          {
+            "slug": "trench-5-opt-3",
+            "position": 2,
+            "label": "Porque escolheu voluntariamente aumentar as punições",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "slug": "trench-6",
+        "kind": "multiple_choice",
+        "position": 5,
+        "title": "Trincheira 6: Wilson e os 14 Pontos",
+        "prompt": "Qual era a linha geral defendida por Woodrow Wilson na Conferência de Paz?",
+        "feedback_correct": "Correto. Wilson propôs uma paz mais negociada, com base nos 14 Pontos.",
+        "options": [
+          {
+            "slug": "trench-6-opt-1",
+            "position": 0,
+            "label": "Punições máximas e ocupação militar permanente",
+            "is_correct": false
+          },
+          {
+            "slug": "trench-6-opt-2",
+            "position": 1,
+            "label": "Paz negociada, cooperação internacional e menos vingança",
+            "is_correct": true
+          },
+          {
+            "slug": "trench-6-opt-3",
+            "position": 2,
+            "label": "Anexar a Alemanha em partes aos países vizinhos",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "slug": "trench-7",
+        "kind": "multiple_choice",
+        "position": 6,
+        "title": "Trincheira 7: Consequências Políticas",
+        "prompt": "Como o Tratado de Versalhes se relaciona com a ascensão do nazismo?",
+        "feedback_correct": "Exato. Crise social e ressentimento foram explorados pelo nazismo nos anos seguintes.",
+        "options": [
+          {
+            "slug": "trench-7-opt-1",
+            "position": 0,
+            "label": "Reduziu crises econômicas e fortaleceu a democracia alemã",
+            "is_correct": false
+          },
+          {
+            "slug": "trench-7-opt-2",
+            "position": 1,
+            "label": "Eliminou o ressentimento nacional e estabilizou totalmente a política",
+            "is_correct": false
+          },
+          {
+            "slug": "trench-7-opt-3",
+            "position": 2,
+            "label": "Aprofundou crise e humilhação, favorecendo discursos radicais",
+            "is_correct": true
+          }
+        ]
+      }
+    ],
+    "documents": []
+  }
+]

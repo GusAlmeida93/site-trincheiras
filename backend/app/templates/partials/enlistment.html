@@ -1,0 +1,69 @@
+<section class="card reveal block-panel active" id="alistamento" role="tabpanel">
+  <div class="enlist-panel">
+    <header class="enlist-header">
+      <h2>Alistamento da Missão</h2>
+    </header>
+    <p class="enlist-intro">
+      Preencha suas credenciais para entrar na operação. Os campos obrigatórios são: <strong>nome completo</strong>
+      e <strong>turma</strong>.
+    </p>
+
+    <form id="enlist-form" class="enlist-form" novalidate>
+      <label for="enlist-name">Nome completo</label>
+      <input id="enlist-name" name="enlist-name" type="text" autocomplete="name"
+        placeholder="Ex.: Ana Carolina Souza" required>
+
+      <label for="enlist-class">Turma</label>
+      <input id="enlist-class" name="enlist-class" type="text" autocomplete="off" placeholder="Ex.: 9º A" required>
+
+      <div class="enlist-avatar-guide">
+        <button id="enlist-avatar-toggle" class="enlist-avatar-toggle" type="button" aria-expanded="true"
+          aria-controls="enlist-avatar-panel">
+          <span class="enlist-avatar-toggle-label">Guia de seleção de avatares</span>
+          <span class="enlist-avatar-toggle-icon" aria-hidden="true">▾</span>
+        </button>
+
+        <div id="enlist-avatar-panel" class="enlist-avatar-panel">
+          <div class="enlist-avatar-wrap">
+            <p class="enlist-avatar-title">Escolha seu avatar</p>
+            <div id="enlist-avatar-grid" class="enlist-avatar-grid" role="radiogroup"
+              aria-label="Seleção de avatar do aluno">
+              {% for avatar in avatars %}
+              <button type="button" class="enlist-avatar-option" data-avatar-url="{{ avatar.url }}"
+                data-avatar-label="{{ avatar.label }}" aria-pressed="false" title="{{ avatar.label }}">
+                <img src="{{ avatar.url }}" alt="{{ avatar.label }}" loading="lazy">
+              </button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="enlist-submit">Emitir credencial</button>
+    </form>
+
+    <p class="enlist-feedback" id="enlist-feedback" aria-live="polite"></p>
+
+    <article class="enlist-card" id="enlist-card" hidden>
+      <header class="enlist-card-top">
+        <p class="enlist-card-kicker">Comando Escolar • Missão Versalhes</p>
+        <span class="enlist-card-stamp" aria-hidden="true">AUTORIZADO</span>
+      </header>
+
+      <div class="enlist-card-shell">
+        <div class="enlist-card-head">
+          <img id="enlist-card-avatar" class="enlist-card-avatar" src="" alt="Avatar do aluno">
+          <p class="enlist-card-photo-tag">Foto de identificação</p>
+        </div>
+
+        <div class="enlist-card-body">
+          <h3 id="enlist-card-name">Nome do Aluno</h3>
+          <p class="enlist-card-line"><strong>Turma:</strong> <span id="enlist-card-class">-</span></p>
+          <p class="enlist-card-line"><strong>Nº de recruta:</strong> <span id="enlist-card-id">-</span></p>
+          <p class="enlist-card-line"><strong>Emissão:</strong> <span id="enlist-card-issued">-</span></p>
+          <p class="enlist-card-authline">Assinatura do comando: __________________</p>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

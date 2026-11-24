@@ -1,0 +1,2312 @@
+{
+  "components": {
+    "schemas": {
+      "ActivityRead": {
+        "properties": {
+          "config": {
+            "additionalProperties": true,
+            "title": "Config",
+            "type": "object"
+          },
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/MatchDocumentRead"
+            },
+            "title": "Documents",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "kind": {
+            "enum": [
+              "match",
+              "quiz"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/QuestionRead"
+            },
+            "title": "Questions",
+            "type": "array"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "kind",
+          "title",
+          "position",
+          "config",
+          "questions",
+          "documents"
+        ],
+        "title": "ActivityRead",
+        "type": "object"
+      },
+      "ActivityWrite": {
+        "properties": {
+          "config": {
+            "additionalProperties": true,
+            "default": {},
+            "title": "Config",
+            "type": "object"
+          },
+          "documents": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/MatchDocumentWrite"
+            },
+            "title": "Documents",
+            "type": "array"
+          },
+          "kind": {
+            "enum": [
+              "match",
+              "quiz"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "position": {
+            "default": 0,
+            "title": "Position",
+            "type": "integer"
+          },
+          "questions": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/QuestionWrite"
+            },
+            "title": "Questions",
+            "type": "array"
+          },
+          "slug": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "kind",
+          "title"
+        ],
+        "title": "ActivityWrite",
+        "type": "object"
+      },
+      "AnswerCreate": {
+        "properties": {
+          "is_correct": {
+            "title": "Is Correct",
+            "type": "boolean"
+          },
+          "player_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Player Id"
+          },
+          "question_id": {
+            "title": "Question Id",
+            "type": "integer"
+          },
+          "score_delta": {
+            "default": 0,
+            "title": "Score Delta",
+            "type": "integer"
+          },
+          "selected_value": {
+            "minLength": 1,
+            "title": "Selected Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "question_id",
+          "selected_value",
+          "is_correct"
+        ],
+        "title": "AnswerCreate",
+        "type": "object"
+      },
+      "AnswerRead": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "is_correct": {
+            "title": "Is Correct",
+            "type": "boolean"
+          },
+          "player_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Player Id"
+          },
+          "question_id": {
+            "title": "Question Id",
+            "type": "integer"
+          },
+          "score_delta": {
+            "title": "Score Delta",
+            "type": "integer"
+          },
+          "selected_value": {
+            "title": "Selected Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "player_id",
+          "question_id",
+          "selected_value",
+          "is_correct",
+          "score_delta",
+          "created_at"
+        ],
+        "title": "AnswerRead",
+        "type": "object"
+      },
+      "AnswerReportRow": {
+        "properties": {
+          "activity_slug": {
+            "title": "Activity Slug",
+            "type": "string"
+          },
+          "class_group": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Class Group"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "is_correct": {
+            "title": "Is Correct",
+            "type": "boolean"
+          },
+          "player_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Player Id"
+          },
+          "player_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Player Name"
+          },
+          "question_slug": {
+            "title": "Question Slug",
+            "type": "string"
+          },
+          "score_delta": {
+            "title": "Score Delta",
+            "type": "integer"
+          },
+          "selected_value": {
+            "title": "Selected Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "player_id",
+          "player_name",
+          "class_group",
+          "activity_slug",
+          "question_slug",
+          "selected_value",
+          "is_correct",
+          "score_delta",
+          "created_at"
+        ],
+        "title": "AnswerReportRow",
+        "type": "object"
+      },
+      "ContentBlockRead": {
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "kind": {
+            "enum": [
+              "flip_card",
+              "participant",
+              "clause"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "slug",
+          "position",
+          "data"
+        ],
+        "title": "ContentBlockRead",
+        "type": "object"
+      },
+      "ContentBlockWrite": {
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          },
+          "kind": {
+            "enum": [
+              "flip_card",
+              "participant",
+              "clause"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "position": {
+            "default": 0,
+            "title": "Position",
+            "type": "integer"
+          },
+          "slug": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "slug",
+          "data"
+        ],
+        "title": "ContentBlockWrite",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HealthStatus": {
+        "properties": {
+          "status": {
+            "default": "ok",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "title": "HealthStatus",
+        "type": "object"
+      },
+      "LessonBundle": {
+        "description": "Everything the browser needs to run a lesson's interactive modules.",
+        "properties": {
+          "activities": {
+            "items": {
+              "$ref": "#/components/schemas/ActivityRead"
+            },
+            "title": "Activities",
+            "type": "array"
+          },
+          "lesson": {
+            "$ref": "#/components/schemas/LessonRead"
+          },
+          "map_regions": {
+            "items": {
+              "$ref": "#/components/schemas/MapRegionRead"
+            },
+            "title": "Map Regions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "lesson",
+          "map_regions",
+          "activities"
+        ],
+        "title": "LessonBundle",
+        "type": "object"
+      },
+      "LessonRead": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "is_published": {
+            "default": true,
+            "title": "Is Published",
+            "type": "boolean"
+          },
+          "position": {
+            "default": 0,
+            "title": "Position",
+            "type": "integer"
+          },
+          "slug": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "id"
+        ],
+        "title": "LessonRead",
+        "type": "object"
+      },
+      "LessonWrite": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "is_published": {
+            "default": true,
+            "title": "Is Published",
+            "type": "boolean"
+          },
+          "position": {
+            "default": 0,
+            "title": "Position",
+            "type": "integer"
+          },
+          "slug": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "title"
+        ],
+        "title": "LessonWrite",
+        "type": "object"
+      },
+      "MapFeatureRead": {
+        "properties": {
+          "ceded_to": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ceded To"
+          },
+          "coordinates": {
+            "items": {},
+            "title": "Coordinates",
+            "type": "array"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "fill_color": {
+            "maxLength": 20,
+            "title": "Fill Color",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "name": {
+            "maxLength": 150,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "position": {
+            "default": 0,
+            "title": "Position",
+            "type": "integer"
+          },
+          "producer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Producer"
+          },
+          "radius_m": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Radius M"
+          },
+          "shape": {
+            "enum": [
+              "polygon",
+              "circle"
+            ],
+            "title": "Shape",
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "description",
+          "shape",
+          "fill_color",
+          "coordinates",
+          "id"
+        ],
+        "title": "MapFeatureRead",
+        "type": "object"
+      },
+      "MapFeatureWrite": {
+        "properties": {
+          "ceded_to": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ceded To"
+          },
+          "coordinates": {
+            "items": {},
+            "title": "Coordinates",
+            "type": "array"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "fill_color": {
+            "maxLength": 20,
+            "title": "Fill Color",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 150,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "position": {
+            "default": 0,
+            "title": "Position",
+            "type": "integer"
+          },
+          "producer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Producer"
+          },
+          "radius_m": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Radius M"
+          },
+          "shape": {
+            "enum": [
+              "polygon",
+              "circle"
+            ],
+            "title": "Shape",
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "description",
+          "shape",
+          "fill_color",
+          "coordinates"
+        ],
+        "title": "MapFeatureWrite",
+        "type": "object"
+      },
+      "MapRegionRead": {
+        "properties": {
+          "center_lat": {
+            "title": "Center Lat",
+            "type": "number"
+          },
+          "center_lng": {
+            "title": "Center Lng",
+            "type": "number"
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/MapFeatureRead"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "zoom": {
+            "title": "Zoom",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "center_lat",
+          "center_lng",
+          "zoom",
+          "note",
+          "position",
+          "features"
+        ],
+        "title": "MapRegionRead",
+        "type": "object"
+      },
+      "MapRegionWrite": {
+        "properties": {
+          "center_lat": {
+            "title": "Center Lat",
+            "type": "number"
+          },
+          "center_lng": {
+            "title": "Center Lng",
+            "type": "number"
+          },
+          "features": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/MapFeatureWrite"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "position": {
+            "default": 0,
+            "title": "Position",
+            "type": "integer"
+          },
+          "slug": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Slug",
+            "type": "string"
+          },
+          "zoom": {
+            "title": "Zoom",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "center_lat",
+          "center_lng",
+          "zoom",
+          "note"
+        ],
+        "title": "MapRegionWrite",
+        "type": "object"
+      },
+      "MatchDocumentRead": {
+        "properties": {
+          "body": {
+            "title": "Body",
+            "type": "string"
+          },
+          "correct_question_slug": {
+            "title": "Correct Question Slug",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "body",
+          "position",
+          "correct_question_slug"
+        ],
+        "title": "MatchDocumentRead",
+        "type": "object"
+      },
+      "MatchDocumentWrite": {
+        "properties": {
+          "body": {
+            "title": "Body",
+            "type": "string"
+          },
+          "correct_question_slug": {
+            "title": "Correct Question Slug",
+            "type": "string"
+          },
+          "position": {
+            "default": 0,
+            "title": "Position",
+            "type": "integer"
+          },
+          "slug": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "body",
+          "correct_question_slug"
+        ],
+        "title": "MatchDocumentWrite",
+        "type": "object"
+      },
+      "Page_AnswerReportRow_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/AnswerReportRow"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[AnswerReportRow]",
+        "type": "object"
+      },
+      "PlayerCreate": {
+        "properties": {
+          "class_group": {
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Class Group",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "recruit_number": {
+            "anyOf": [
+              {
+                "maxLength": 50,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recruit Number"
+          }
+        },
+        "required": [
+          "name",
+          "class_group"
+        ],
+        "title": "PlayerCreate",
+        "type": "object"
+      },
+      "PlayerRead": {
+        "properties": {
+          "class_group": {
+            "title": "Class Group",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "recruit_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recruit Number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "class_group",
+          "recruit_number",
+          "created_at"
+        ],
+        "title": "PlayerRead",
+        "type": "object"
+      },
+      "PlayerScoreSummary": {
+        "properties": {
+          "answers_count": {
+            "title": "Answers Count",
+            "type": "integer"
+          },
+          "class_group": {
+            "title": "Class Group",
+            "type": "string"
+          },
+          "correct_count": {
+            "title": "Correct Count",
+            "type": "integer"
+          },
+          "last_answer_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Answer At"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "player_id": {
+            "title": "Player Id",
+            "type": "integer"
+          },
+          "recruit_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recruit Number"
+          },
+          "total_score": {
+            "title": "Total Score",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "player_id",
+          "name",
+          "class_group",
+          "recruit_number",
+          "answers_count",
+          "correct_count",
+          "total_score",
+          "last_answer_at"
+        ],
+        "title": "PlayerScoreSummary",
+        "type": "object"
+      },
+      "QuestionOptionRead": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "is_correct": {
+            "default": false,
+            "title": "Is Correct",
+            "type": "boolean"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "position": {
+            "default": 0,
+            "title": "Position",
+            "type": "integer"
+          },
+          "slug": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "label",
+          "id"
+        ],
+        "title": "QuestionOptionRead",
+        "type": "object"
+      },
+      "QuestionOptionWrite": {
+        "properties": {
+          "is_correct": {
+            "default": false,
+            "title": "Is Correct",
+            "type": "boolean"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "position": {
+            "default": 0,
+            "title": "Position",
+            "type": "integer"
+          },
+          "slug": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "label"
+        ],
+        "title": "QuestionOptionWrite",
+        "type": "object"
+      },
+      "QuestionRead": {
+        "properties": {
+          "feedback_correct": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Feedback Correct"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "kind": {
+            "enum": [
+              "multiple_choice",
+              "match_drawer"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "options": {
+            "items": {
+              "$ref": "#/components/schemas/QuestionOptionRead"
+            },
+            "title": "Options",
+            "type": "array"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "prompt": {
+            "title": "Prompt",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "kind",
+          "position",
+          "title",
+          "prompt",
+          "feedback_correct",
+          "options"
+        ],
+        "title": "QuestionRead",
+        "type": "object"
+      },
+      "QuestionWrite": {
+        "properties": {
+          "feedback_correct": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Feedback Correct"
+          },
+          "kind": {
+            "enum": [
+              "multiple_choice",
+              "match_drawer"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "options": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/QuestionOptionWrite"
+            },
+            "title": "Options",
+            "type": "array"
+          },
+          "position": {
+            "default": 0,
+            "title": "Position",
+            "type": "integer"
+          },
+          "prompt": {
+            "title": "Prompt",
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "slug",
+          "kind",
+          "prompt"
+        ],
+        "title": "QuestionWrite",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Interactive history-lesson platform: lesson content, player registration, answer telemetry, and teacher reporting.",
+    "title": "Trincheiras Lesson Platform",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/admin/lessons": {
+      "get": {
+        "operationId": "list_lessons_api_v1_admin_lessons_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/LessonRead"
+                  },
+                  "title": "Response List Lessons Api V1 Admin Lessons Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Lessons",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/lessons/{lesson_slug}": {
+      "delete": {
+        "operationId": "delete_lesson_api_v1_admin_lessons__lesson_slug__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lesson_slug",
+            "required": true,
+            "schema": {
+              "title": "Lesson Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Lesson",
+        "tags": [
+          "admin"
+        ]
+      },
+      "put": {
+        "operationId": "put_lesson_api_v1_admin_lessons__lesson_slug__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lesson_slug",
+            "required": true,
+            "schema": {
+              "title": "Lesson Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LessonWrite"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LessonRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Lesson",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/lessons/{lesson_slug}/activities/{slug}": {
+      "delete": {
+        "operationId": "delete_activity_api_v1_admin_lessons__lesson_slug__activities__slug__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lesson_slug",
+            "required": true,
+            "schema": {
+              "title": "Lesson Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Activity",
+        "tags": [
+          "admin"
+        ]
+      },
+      "put": {
+        "operationId": "put_activity_api_v1_admin_lessons__lesson_slug__activities__slug__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lesson_slug",
+            "required": true,
+            "schema": {
+              "title": "Lesson Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivityWrite"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Activity",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/lessons/{lesson_slug}/content-blocks": {
+      "get": {
+        "operationId": "list_content_blocks_api_v1_admin_lessons__lesson_slug__content_blocks_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lesson_slug",
+            "required": true,
+            "schema": {
+              "title": "Lesson Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Kind"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ContentBlockRead"
+                  },
+                  "title": "Response List Content Blocks Api V1 Admin Lessons  Lesson Slug  Content Blocks Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Content Blocks",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/lessons/{lesson_slug}/content-blocks/{slug}": {
+      "delete": {
+        "operationId": "delete_content_block_api_v1_admin_lessons__lesson_slug__content_blocks__slug__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lesson_slug",
+            "required": true,
+            "schema": {
+              "title": "Lesson Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Content Block",
+        "tags": [
+          "admin"
+        ]
+      },
+      "put": {
+        "operationId": "put_content_block_api_v1_admin_lessons__lesson_slug__content_blocks__slug__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lesson_slug",
+            "required": true,
+            "schema": {
+              "title": "Lesson Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContentBlockWrite"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentBlockRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Content Block",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/lessons/{lesson_slug}/map-regions/{slug}": {
+      "delete": {
+        "operationId": "delete_map_region_api_v1_admin_lessons__lesson_slug__map_regions__slug__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lesson_slug",
+            "required": true,
+            "schema": {
+              "title": "Lesson Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Map Region",
+        "tags": [
+          "admin"
+        ]
+      },
+      "put": {
+        "operationId": "put_map_region_api_v1_admin_lessons__lesson_slug__map_regions__slug__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lesson_slug",
+            "required": true,
+            "schema": {
+              "title": "Lesson Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MapRegionWrite"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MapRegionRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Map Region",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/answers": {
+      "post": {
+        "operationId": "record_answer_api_v1_answers_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnswerCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnswerRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Record Answer",
+        "tags": [
+          "answers"
+        ]
+      }
+    },
+    "/api/v1/lessons/{slug}/bundle": {
+      "get": {
+        "operationId": "get_lesson_bundle_api_v1_lessons__slug__bundle_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LessonBundle"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Lesson Bundle",
+        "tags": [
+          "lessons"
+        ]
+      }
+    },
+    "/api/v1/players": {
+      "post": {
+        "operationId": "create_player_api_v1_players_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlayerCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Player",
+        "tags": [
+          "players"
+        ]
+      }
+    },
+    "/api/v1/reports/answers": {
+      "get": {
+        "operationId": "list_answers_api_v1_reports_answers_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "class_group",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Class Group"
+            }
+          },
+          {
+            "in": "query",
+            "name": "activity",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Activity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_AnswerReportRow_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Answers",
+        "tags": [
+          "reports"
+        ]
+      }
+    },
+    "/api/v1/reports/players": {
+      "get": {
+        "operationId": "player_scores_api_v1_reports_players_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "class_group",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Class Group"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PlayerScoreSummary"
+                  },
+                  "title": "Response Player Scores Api V1 Reports Players Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Player Scores",
+        "tags": [
+          "reports"
+        ]
+      }
+    },
+    "/api/v1/reports/players/{player_id}/answers": {
+      "get": {
+        "operationId": "player_answers_api_v1_reports_players__player_id__answers_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "player_id",
+            "required": true,
+            "schema": {
+              "title": "Player Id",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AnswerReportRow"
+                  },
+                  "title": "Response Player Answers Api V1 Reports Players  Player Id  Answers Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Player Answers",
+        "tags": [
+          "reports"
+        ]
+      }
+    },
+    "/healthz": {
+      "get": {
+        "operationId": "healthz_healthz_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Healthz",
+        "tags": [
+          "health"
+        ]
+      }
+    }
+  }
+}

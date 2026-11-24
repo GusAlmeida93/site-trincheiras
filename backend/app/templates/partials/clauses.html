@@ -1,0 +1,37 @@
+<section class="card reveal block-panel" id="clausulas" role="tabpanel" hidden>
+  <div class="clause-layout">
+    <aside class="clause-index" aria-label="Índice de artigos do tratado">
+      <p class="clause-index-title">ÍNDICE DE ARTIGOS</p>
+
+      {% for clause in clauses %}
+      <button class="clause-item{{ ' active' if loop.first else '' }}" data-article="{{ clause.data.article_key }}"
+        aria-selected="{{ 'true' if loop.first else 'false' }}">
+        <span class="clause-item-number">{{ clause.data.number | upper }}</span>
+        <span class="clause-item-title">{{ clause.data.title }}</span>
+        <span class="clause-item-arrow" aria-hidden="true">›</span>
+      </button>
+      {% endfor %}
+    </aside>
+
+    {% for clause in clauses %}
+    <article class="clause-document" data-article="{{ clause.data.article_key }}" aria-live="polite"
+      {{ '' if loop.first else 'hidden' }}>
+      <header class="clause-document-head">
+        <span class="clause-document-icon" aria-hidden="true">{{ clause.data.icon_svg | safe }}</span>
+        <div>
+          <p class="clause-document-number">{{ clause.data.number }}</p>
+          <h3 class="clause-document-title">{{ clause.data.title }}</h3>
+        </div>
+      </header>
+
+      <p class="clause-document-label">TEXTO ORIGINAL (TRADUZIDO)</p>
+      <blockquote class="clause-document-quote">{{ clause.data.quote }}</blockquote>
+
+      <section class="clause-document-impact">
+        <h4>O QUE ISSO SIGNIFICOU NA PRÁTICA?</h4>
+        <p>{{ clause.data.impact }}</p>
+      </section>
+    </article>
+    {% endfor %}
+  </div>
+</section>

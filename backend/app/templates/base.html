@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-lesson-slug="{{ lesson.slug }}">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{{ lesson.description or '' }}">
+  <meta name="theme-color" content="#1f2933">
+  <title>{{ lesson.title }}</title>
+  {# In dev, CSS arrives via the Vite module graph — paint dark instead of white until then. #}
+  <style>html{background:#18110c}</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Special+Elite&display=swap"
+    rel="stylesheet">
+  {{ vite_asset('src/main.ts') }}
+</head>
+
+<body>
+  <noscript>
+    <p style="padding:2rem;text-align:center;font-family:sans-serif;color:#f9f3e7;">
+      Este site requer JavaScript para funcionar. Por favor, habilite o JavaScript no seu navegador.
+    </p>
+  </noscript>
+  <main class="layout">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+
+</html>

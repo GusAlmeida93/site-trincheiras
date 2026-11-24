@@ -1,0 +1,47 @@
+<section class="card reveal block-panel" id="questoes" role="tabpanel" hidden>
+  {% if war_room %}
+  <div class="war-room">
+    <p class="war-room-brief">
+      <strong>Sala de Comando de Guerra:</strong> Organize os relatórios de inteligência. Arraste (ou clique) em
+      cada documento do quadro de
+      planejamento para a gaveta do arquivo correspondente à pergunta.
+    </p>
+
+    <div class="war-score-panel">
+      <strong>Pontuação:</strong> <span id="war-score">0</span> pontos
+    </div>
+
+    <div class="war-room-grid">
+      <section class="war-cabinet" aria-label="Arquivo confidencial">
+        <header class="war-cabinet-head">ARQUIVO CONFIDENCIAL</header>
+
+        <div class="war-drawers">
+          {% for question in war_room.questions %}
+          <article class="war-drawer" data-drawer-id="{{ question.id }}">
+            <span class="war-drawer-label">{{ question.title }}</span>
+            <p>{{ question.prompt }}</p>
+            <div class="war-drawer-answer" aria-live="polite"></div>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="war-board" aria-label="Quadro de planejamento">
+        <h3>QUADRO DE PLANEJAMENTO</h3>
+        <div class="war-intel-stack">
+          {% for document in war_room.documents %}
+          <article class="war-intel-card" draggable="true" data-doc-id="{{ document.id }}"
+            data-doc-slug="{{ document.slug }}">
+            <span class="war-intel-pin" aria-hidden="true"></span>
+            <p class="war-intel-label">DOC CONFIDENCIAL</p>
+            <p class="war-intel-body">{{ document.body }}</p>
+          </article>
+          {% endfor %}
+        </div>
+
+        <p class="war-status" id="war-status">Arquive os documentos nas gavetas corretas.</p>
+      </section>
+    </div>
+  </div>
+  {% endif %}
+</section>

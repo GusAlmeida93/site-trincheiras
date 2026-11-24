@@ -9,12 +9,11 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U trincheiras"]
+      test: ["CMD-SHELL", "pg_isready -U trincheiras -d trincheiras"]
       interval: 5s
       timeout: 3s
-      retries: 5
+      retries: 10
 
   app:
     build: .
@@ -22,7 +21,10 @@ services:
       - "3000:8080"
     environment:
       PORT: 8080
-      DATABASE_URL: postgresql://trincheiras:trincheiras@db:5432/trincheiras
+      DATABASE_URL: postgresql+psycopg://trincheiras:trincheiras@db:5432/trincheiras
+      ADMIN_TOKEN: dev-admin-token
+      RUN_MIGRATIONS: "true"
+      RUN_SEED: "true"
     depends_on:
       db:
         condition: service_healthy

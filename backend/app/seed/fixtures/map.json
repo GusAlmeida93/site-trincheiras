@@ -1,0 +1,356 @@
+[
+  {
+    "slug": "europe",
+    "name": "Europa",
+    "center_lat": 50.8,
+    "center_lng": 9.2,
+    "zoom": 4,
+    "note": "Europa: áreas destacadas representam regiões retiradas da Alemanha pelo Tratado de Versalhes.",
+    "position": 0,
+    "features": [
+      {
+        "slug": "alsacia-lorena",
+        "name": "Alsácia-Lorena",
+        "description": "Devolvida à França.",
+        "producer": "minério de ferro, carvão e indústria siderúrgica.",
+        "ceded_to": "França (devolução confirmada pelo Tratado de Versalhes).",
+        "shape": "polygon",
+        "fill_color": "#e3a8a8",
+        "coordinates": [
+          [
+            49.35,
+            7.15
+          ],
+          [
+            49.68,
+            7.9
+          ],
+          [
+            48.58,
+            8.2
+          ],
+          [
+            48.2,
+            7.45
+          ]
+        ],
+        "radius_m": null,
+        "position": 0
+      },
+      {
+        "slug": "eupen-malmedy",
+        "name": "Eupen-Malmedy",
+        "description": "Transferida para a Bélgica.",
+        "producer": "carvão, zinco e atividades industriais locais.",
+        "ceded_to": "Bélgica (plebiscito supervisionado pelos vencedores).",
+        "shape": "polygon",
+        "fill_color": "#f5d39c",
+        "coordinates": [
+          [
+            50.9,
+            5.85
+          ],
+          [
+            51.1,
+            6.35
+          ],
+          [
+            50.74,
+            6.62
+          ],
+          [
+            50.54,
+            6.06
+          ]
+        ],
+        "radius_m": null,
+        "position": 1
+      },
+      {
+        "slug": "corredor-polones",
+        "name": "Corredor Polonês",
+        "description": "Área cedida para garantir saída da Polônia ao mar.",
+        "producer": "grãos, madeira e acesso estratégico ao Mar Báltico.",
+        "ceded_to": "Polônia reconstituída pelos acordos de paz pós-guerra.",
+        "shape": "polygon",
+        "fill_color": "#c7b3e8",
+        "coordinates": [
+          [
+            54,
+            16.9
+          ],
+          [
+            54.05,
+            19.45
+          ],
+          [
+            52.1,
+            19.2
+          ],
+          [
+            52.45,
+            16.35
+          ]
+        ],
+        "radius_m": null,
+        "position": 2
+      },
+      {
+        "slug": "schleswig-do-norte",
+        "name": "Schleswig do Norte",
+        "description": "Integrado à Dinamarca após plebiscito.",
+        "producer": "pecuária leiteira, cereais e comércio regional.",
+        "ceded_to": "Dinamarca (resultado de plebiscito em 1920).",
+        "shape": "polygon",
+        "fill_color": "#9dc8e6",
+        "coordinates": [
+          [
+            55.65,
+            8.05
+          ],
+          [
+            55.38,
+            9.65
+          ],
+          [
+            54.78,
+            9.45
+          ],
+          [
+            54.95,
+            8
+          ]
+        ],
+        "radius_m": null,
+        "position": 3
+      },
+      {
+        "slug": "sarre",
+        "name": "Sarre",
+        "description": "Administração internacional temporária (Liga das Nações).",
+        "producer": "carvão mineral e base para indústria pesada.",
+        "ceded_to": "Administração da Liga das Nações; exploração econômica francesa.",
+        "shape": "circle",
+        "fill_color": "#e7c8a0",
+        "coordinates": [
+          49.32,
+          6.9
+        ],
+        "radius_m": 80000,
+        "position": 4
+      }
+    ]
+  },
+  {
+    "slug": "africa",
+    "name": "África",
+    "center_lat": 0.7,
+    "center_lng": 22,
+    "zoom": 3,
+    "note": "África: ex-colônias alemãs foram redistribuídas entre potências vencedoras sob mandato internacional.",
+    "position": 1,
+    "features": [
+      {
+        "slug": "camaroes-alemaes",
+        "name": "Camarões Alemães",
+        "description": "Divididos entre França e Reino Unido.",
+        "producer": "cacau, borracha, óleo de palma e madeira tropical.",
+        "ceded_to": "Mandatos da França e do Reino Unido.",
+        "shape": "polygon",
+        "fill_color": "#e2b0b0",
+        "coordinates": [
+          [
+            13.1,
+            8
+          ],
+          [
+            12.9,
+            15.1
+          ],
+          [
+            2,
+            15.5
+          ],
+          [
+            2.4,
+            8.1
+          ]
+        ],
+        "radius_m": null,
+        "position": 0
+      },
+      {
+        "slug": "sudoeste-africano-alemao",
+        "name": "Sudoeste Africano Alemão",
+        "description": "Passou para mandato da África do Sul.",
+        "producer": "diamantes, cobre e criação de gado.",
+        "ceded_to": "União Sul-Africana (mandato aprovado pela Liga das Nações).",
+        "shape": "polygon",
+        "fill_color": "#b4d4ea",
+        "coordinates": [
+          [
+            -17.2,
+            11.3
+          ],
+          [
+            -17.4,
+            19.5
+          ],
+          [
+            -28.9,
+            20
+          ],
+          [
+            -28.7,
+            12
+          ]
+        ],
+        "radius_m": null,
+        "position": 1
+      },
+      {
+        "slug": "africa-oriental-alema",
+        "name": "África Oriental Alemã",
+        "description": "Principal parte virou Tanganica (mandato britânico).",
+        "producer": "algodão, sisal, café e rotas comerciais do Índico.",
+        "ceded_to": "Reino Unido (Tanganica), Bélgica (Ruanda-Urundi) e Portugal em faixas de fronteira.",
+        "shape": "polygon",
+        "fill_color": "#c9dba8",
+        "coordinates": [
+          [
+            -0.4,
+            29
+          ],
+          [
+            -0.4,
+            39.4
+          ],
+          [
+            -11.9,
+            40
+          ],
+          [
+            -11.8,
+            29
+          ]
+        ],
+        "radius_m": null,
+        "position": 2
+      },
+      {
+        "slug": "togo-alemao",
+        "name": "Togo Alemão",
+        "description": "Dividido entre França e Reino Unido.",
+        "producer": "cacau, algodão, fosfato e comércio atlântico.",
+        "ceded_to": "Mandatos francês e britânico.",
+        "shape": "polygon",
+        "fill_color": "#f2cf97",
+        "coordinates": [
+          [
+            11,
+            0.45
+          ],
+          [
+            11,
+            1.82
+          ],
+          [
+            6,
+            1.82
+          ],
+          [
+            6,
+            0.45
+          ]
+        ],
+        "radius_m": null,
+        "position": 3
+      }
+    ]
+  },
+  {
+    "slug": "asia-pacific",
+    "name": "Ásia e Pacífico",
+    "center_lat": 14,
+    "center_lng": 143,
+    "zoom": 3,
+    "note": "Ásia e Pacífico: territórios e concessões alemãs foram transferidos para Japão e outras administrações.",
+    "position": 2,
+    "features": [
+      {
+        "slug": "concessao-de-kiautschou-shandong",
+        "name": "Concessão de Kiautschou (Shandong)",
+        "description": "Transferida ao Japão.",
+        "producer": "porto estratégico, ferrovias e comércio marítimo regional.",
+        "ceded_to": "Japão (posteriormente renegociada com a China).",
+        "shape": "polygon",
+        "fill_color": "#e9b4b2",
+        "coordinates": [
+          [
+            37.9,
+            120
+          ],
+          [
+            37.3,
+            121.7
+          ],
+          [
+            35.8,
+            121.8
+          ],
+          [
+            35.7,
+            120.2
+          ]
+        ],
+        "radius_m": null,
+        "position": 0
+      },
+      {
+        "slug": "ilhas-marianas",
+        "name": "Ilhas Marianas",
+        "description": "Mandato japonês no Pacífico.",
+        "producer": "copra, fosfato e pontos de apoio naval.",
+        "ceded_to": "Japão (mandato do Pacífico Norte).",
+        "shape": "circle",
+        "fill_color": "#a9cce9",
+        "coordinates": [
+          15.2,
+          145.5
+        ],
+        "radius_m": 230000,
+        "position": 1
+      },
+      {
+        "slug": "carolinas-e-marshall",
+        "name": "Carolinas e Marshall",
+        "description": "Administração japonesa após a guerra.",
+        "producer": "copra, pesca oceânica e rotas marítimas estratégicas.",
+        "ceded_to": "Japão por mandato internacional da Liga das Nações.",
+        "shape": "circle",
+        "fill_color": "#d7c0e6",
+        "coordinates": [
+          7.6,
+          164.2
+        ],
+        "radius_m": 260000,
+        "position": 2
+      },
+      {
+        "slug": "nordeste-da-nova-guine",
+        "name": "Nordeste da Nova Guiné",
+        "description": "Mandato australiano.",
+        "producer": "copra, fosfato e matérias-primas tropicais.",
+        "ceded_to": "Austrália (mandato da Liga das Nações).",
+        "shape": "circle",
+        "fill_color": "#f1d79f",
+        "coordinates": [
+          -4.3,
+          147.4
+        ],
+        "radius_m": 270000,
+        "position": 3
+      }
+    ]
+  }
+]
