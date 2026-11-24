@@ -24,6 +24,40 @@ test.describe('tabs and server-rendered content', () => {
     await expect(page.locator('#alistamento')).toBeHidden();
   });
 
+  test('arrow keys, Home and End move between tabs', async ({ page }) => {
+    await page.goto('/');
+    const tab = (target: string) => page.locator(`.block-tab[data-target="${target}"]`);
+
+    // The tab list is one Tab stop: only the selected tab is in the tab order.
+    await expect(tab('alistamento')).toHaveAttribute('tabindex', '0');
+    await expect(tab('contexto2')).toHaveAttribute('tabindex', '-1');
+    await expect(tab('contexto2')).toHaveAttribute('aria-controls', 'contexto2');
+    await expect(page.locator('#contexto2')).toHaveAttribute('aria-labelledby', 'tab-contexto2');
+
+    await tab('alistamento').focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(tab('contexto2')).toBeFocused();
+    await expect(tab('contexto2')).toHaveAttribute('aria-selected', 'true');
+    await expect(tab('contexto2')).toHaveAttribute('tabindex', '0');
+    await expect(tab('alistamento')).toHaveAttribute('tabindex', '-1');
+    await expect(page.locator('#contexto2')).toBeVisible();
+    await expect(page.locator('#alistamento')).toBeHidden();
+
+    await page.keyboard.press('End');
+    await expect(tab('desafio')).toBeFocused();
+    await expect(page.locator('#desafio')).toBeVisible();
+
+    // Wraps around in both directions.
+    await page.keyboard.press('ArrowRight');
+    await expect(tab('alistamento')).toBeFocused();
+    await page.keyboard.press('ArrowLeft');
+    await expect(tab('desafio')).toBeFocused();
+
+    await page.keyboard.press('Home');
+    await expect(tab('alistamento')).toBeFocused();
+    await expect(page.locator('#alistamento')).toBeVisible();
+  });
+
   test('flip cards render from the database and toggle', async ({ page }) => {
     await page.goto('/');
     await page.locator('.block-tab[data-target="contexto2"]').click();

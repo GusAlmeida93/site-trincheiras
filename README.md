@@ -328,7 +328,7 @@ ORDER BY a.created_at;
   answers ship in the lesson bundle exactly as the legacy site shipped them in JS.
 - Real authentication + an admin UI (the token-gated API is the seam).
 - CI pipeline (GitHub Actions running `make check` + image build).
-- Tab keyboard a11y (arrow-key roving focus), pointer-events drag-and-drop.
+- Pointer-events drag-and-drop (touch screens fall back to click-to-place today).
 - A second lesson to exercise the content model end-to-end.
 
 ## License
