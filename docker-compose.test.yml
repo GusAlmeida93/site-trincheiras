@@ -27,6 +27,7 @@ services:
       PORT: 8080
       DATABASE_URL: postgresql+psycopg://trincheiras:trincheiras@db:5432/trincheiras
       ADMIN_TOKEN: e2e-admin-token
+      SESSION_SECRET: e2e-only-session-secret-do-not-deploy-0000
       APP_ENV: test
       RUN_MIGRATIONS: "true"
       RUN_SEED: "true"

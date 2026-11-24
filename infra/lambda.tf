@@ -40,6 +40,15 @@ resource "random_password" "admin_token" {
   special = false
 }
 
+# Keys the digests of teacher session and invite tokens. Both functions need
+# the same value: "ops" issues invite links and "web" checks them. Replacing
+# it (terraform apply -replace=random_password.session_secret) signs every
+# teacher out and voids outstanding invite links.
+resource "random_password" "session_secret" {
+  length  = 64
+  special = false
+}
+
 locals {
   functions = {
     web = {
@@ -67,6 +76,8 @@ locals {
     PORT         = "8080"
     DATABASE_URL = local.database_url
     ADMIN_TOKEN  = random_password.admin_token.result
+    # Enables teacher sign-in at /admin; without it the app keeps it off.
+    SESSION_SECRET = random_password.session_secret.result
     # A frozen sandbox must not keep a connection open: Aurora pauses only
     # when none is left.
     DB_POOL            = "false"

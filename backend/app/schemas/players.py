@@ -29,3 +29,8 @@ class PlayerRead(BaseModel):
     class_group: str
     recruit_number: str | None
     created_at: datetime
+
+
+class DeletionResult(BaseModel):
+    players_deleted: int
+    answers_deleted: int

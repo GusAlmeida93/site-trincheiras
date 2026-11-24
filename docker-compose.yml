@@ -23,6 +23,8 @@ services:
       PORT: 8080
       DATABASE_URL: postgresql+psycopg://trincheiras:trincheiras@db:5432/trincheiras
       ADMIN_TOKEN: dev-admin-token
+      # Local development only. Anywhere else, generate one: openssl rand -hex 32
+      SESSION_SECRET: dev-only-session-secret-do-not-deploy-0000
       RUN_MIGRATIONS: "true"
       RUN_SEED: "true"
     depends_on:

@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Entrar{% endblock %}
+
+{% block content %}
+<section class="card card-narrow">
+  <h1>Entrar</h1>
+  <p class="lead">Acesso restrito a professores.</p>
+  {# method=post only so that a browser without JavaScript can never put the
+     password in the address bar; the request itself is sent with fetch. #}
+  <form id="sign-in-form" class="form" method="post" action="/admin/entrar">
+    <label for="sign-in-email">E-mail</label>
+    <input id="sign-in-email" name="email" type="email" autocomplete="username" maxlength="254" required autofocus>
+
+    <label for="sign-in-password">Senha</label>
+    <input id="sign-in-password" name="password" type="password" autocomplete="current-password" maxlength="128" required>
+
+    <p id="form-error" class="notice notice-error" role="alert" hidden></p>
+    <button type="submit" class="btn btn-primary" disabled>Entrar</button>
+  </form>
+  <p class="hint">Primeiro acesso ou esqueceu a senha? Peça um link de acesso a quem administra o site.</p>
+</section>
+{% endblock %}

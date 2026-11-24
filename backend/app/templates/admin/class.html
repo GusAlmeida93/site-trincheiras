@@ -1,0 +1,58 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Turma {{ class_group }}{% endblock %}
+
+{% block content %}
+<nav class="crumbs" aria-label="Você está em"><a href="/admin">Turmas</a> <span aria-hidden="true">›</span> {{ class_group }}</nav>
+
+<div class="page-head">
+  <h1>Turma {{ class_group }}</h1>
+  <div class="actions">
+    <a class="btn" href="/admin/atividades?turma={{ class_group|urlencode }}">Resumo por atividade</a>
+    <a class="btn" id="export-csv" href="/api/v1/reports/players.csv?class_group={{ class_group|urlencode }}" download>Exportar CSV</a>
+    <button type="button" class="btn btn-danger" id="delete-class"
+      data-delete-url="/api/v1/admin/players?class_group={{ class_group|urlencode }}"
+      data-delete-kind="class"
+      data-confirm-title="Apagar a turma {{ class_group }}?"
+      data-confirm-text="Serão apagados {{ players|length }} aluno(s) e {{ answers_count }} resposta(s) desta turma."
+      data-after="/admin">Apagar turma</button>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table class="data" id="players-table">
+    <thead>
+      <tr>
+        <th scope="col">Aluno</th>
+        <th scope="col">Nº de recruta</th>
+        <th scope="col" class="num">Respostas</th>
+        <th scope="col" class="num">Acertos</th>
+        <th scope="col" class="num">Pontuação</th>
+        <th scope="col">Última resposta</th>
+        <th scope="col" aria-label="Ações"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in players %}
+      <tr data-player-id="{{ p.player_id }}">
+        <th scope="row"><a href="/admin/alunos/{{ p.player_id }}">{{ p.name }}</a></th>
+        <td>{{ p.recruit_number or '—' }}</td>
+        <td class="num">{{ p.answers_count }}</td>
+        <td class="num">{{ p.correct_count }} <span class="muted">({{ percent(p.correct_count, p.answers_count) }})</span></td>
+        <td class="num strong">{{ p.total_score }}</td>
+        <td>{{ p.last_answer_at|datahora }}</td>
+        <td class="row-actions">
+          <button type="button" class="btn btn-small btn-danger"
+            data-delete-url="/api/v1/admin/players/{{ p.player_id }}"
+            data-delete-kind="player"
+            data-confirm-title="Apagar {{ p.name }}?"
+            data-confirm-text="O cadastro e {{ p.answers_count }} resposta(s) deste aluno serão apagados."
+            data-after="/admin/turma?nome={{ class_group|urlencode }}"
+            aria-label="Apagar {{ p.name }}">Apagar</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
