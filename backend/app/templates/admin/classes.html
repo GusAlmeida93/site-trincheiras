@@ -1,0 +1,42 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Turmas{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <h1>Turmas</h1>
+  <a class="btn" href="/admin/atividades">Resumo por atividade</a>
+</div>
+
+{% if classes %}
+<div class="table-wrap">
+  <table class="data" id="classes-table">
+    <thead>
+      <tr>
+        <th scope="col">Turma</th>
+        <th scope="col" class="num">Alunos</th>
+        <th scope="col" class="num">Respostas</th>
+        <th scope="col" class="num">Acertos</th>
+        <th scope="col" class="num">Pontos (soma)</th>
+        <th scope="col">Última resposta</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in classes %}
+      <tr>
+        <th scope="row"><a href="/admin/turma?nome={{ c.class_group|urlencode }}">{{ c.class_group }}</a></th>
+        <td class="num">{{ c.players_count }}</td>
+        <td class="num">{{ c.answers_count }}</td>
+        <td class="num">{{ c.correct_count }} <span class="muted">({{ percent(c.correct_count, c.answers_count) }})</span></td>
+        <td class="num">{{ c.total_score }}</td>
+        <td>{{ c.last_answer_at|datahora }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<p class="hint">O nome da turma é o que cada aluno digitou ao se alistar; grafias diferentes aparecem como turmas separadas.</p>
+{% else %}
+<p class="empty">Nenhum aluno se alistou ainda.</p>
+{% endif %}
+{% endblock %}

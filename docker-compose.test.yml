@@ -1,0 +1,42 @@
+# Standalone e2e stack: throwaway tmpfs database, app on :8001 with the
+# test-support router enabled. Driven by Playwright's global setup/teardown.
+# E2E_PORT moves the port and E2E_PROJECT renames the compose project, so two
+# checkouts can run the suite at the same time.
+name: trincheiras-e2e
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: trincheiras
+      POSTGRES_PASSWORD: trincheiras
+      POSTGRES_DB: trincheiras
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trincheiras -d trincheiras"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  app:
+    build: .
+    ports:
+      - "${E2E_PORT:-8001}:8080"
+    environment:
+      PORT: 8080
+      DATABASE_URL: postgresql+psycopg://trincheiras:trincheiras@db:5432/trincheiras
+      ADMIN_TOKEN: e2e-admin-token
+      SESSION_SECRET: e2e-only-session-secret-do-not-deploy-0000
+      APP_ENV: test
+      RUN_MIGRATIONS: "true"
+      RUN_SEED: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8080/healthz\")'"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 5s

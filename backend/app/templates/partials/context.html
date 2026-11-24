@@ -1,0 +1,34 @@
+<section class="card reveal block-panel" id="contexto2" role="tabpanel" hidden>
+  <div class="context2-intro">
+    <p>
+      Em novembro de 1918, as armas finalmente silenciaram na Europa. A Primeira Guerra Mundial havia terminado,
+      deixando um rastro de destruição sem precedentes, impérios em ruínas e milhões de mortos.
+    </p>
+    <p>
+      Em 1919, os líderes dos países vencedores se reuniram na Conferência de Paz de Paris para decidir o futuro do
+      mundo e, principalmente, o destino da Alemanha, considerada a grande derrotada.
+    </p>
+  </div>
+
+  <section class="intel-board" aria-label="Quadro interativo da Conferência de Paz">
+    <p class="intel-board-tip">Clique em uma foto para virar o cartão e revelar a informação.</p>
+
+    <div class="intel-board-frame">
+      {% for card in flip_cards %}
+      <button class="intel-photo-card" data-intel="{{ card.data.intel_key }}" aria-pressed="false" type="button">
+        <span class="intel-photo-flip">
+          <span class="intel-photo-face intel-photo-front">
+            <span class="intel-photo-tag">{{ card.data.tag }}</span>
+            <span class="intel-photo-shot {{ card.data.photo_class }}" aria-hidden="true"></span>
+            <span class="intel-photo-foot">{{ card.data.foot }}</span>
+          </span>
+          <span class="intel-photo-face intel-photo-back">
+            <span class="intel-back-title">{{ card.data.back_title }}</span>
+            <span class="intel-back-text">{{ card.data.back_text }}</span>
+          </span>
+        </span>
+      </button>
+      {% endfor %}
+    </div>
+  </section>
+</section>

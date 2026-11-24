@@ -1,0 +1,58 @@
+<section class="card reveal block-panel" id="desafio" role="tabpanel" hidden>
+  {% if trench %}
+  <div class="trench-challenge">
+    <header class="trench-intro">
+      <div class="trench-intro-title">
+        <svg class="challenge-heading-icon" viewBox="0 0 64 64" aria-hidden="true" fill="none"
+          stroke-linecap="round" stroke-linejoin="round">
+          <g stroke="currentColor" stroke-width="3">
+            <path d="M16 48L48 16M48 48L16 16" />
+            <circle cx="20" cy="44" r="2" fill="currentColor" />
+            <circle cx="44" cy="20" r="2" fill="currentColor" />
+            <circle cx="44" cy="44" r="2" fill="currentColor" />
+            <circle cx="20" cy="20" r="2" fill="currentColor" />
+          </g>
+          <path d="M12 34c0-10 9-18 20-18s20 8 20 18c0 2-4 4-20 4s-20-2-20-4z" fill="currentColor"
+            stroke="currentColor" stroke-width="2" />
+          <path d="M32 16v18" stroke="#1c1917" stroke-width="2" opacity="0.4" />
+        </svg>
+        <h2>{{ trench.title }}</h2>
+      </div>
+      <p>
+        Sobreviva ao campo de batalha diplomático. Avance pelas trincheiras respondendo corretamente aos desafios
+        sobre o Tratado de Versalhes e conclua o relatório final.
+      </p>
+    </header>
+
+    <div class="war-score-panel">
+      <strong>Pontuação:</strong> <span id="trench-score">0</span> pontos
+    </div>
+
+    <section class="trench-arena" aria-label="Missão interativa das trincheiras">
+      <div class="trench-progress" aria-label="Progresso da missão">
+        <div class="trench-progress-track" aria-hidden="true"></div>
+        <div class="trench-progress-fill" id="trench-progress-fill" aria-hidden="true"></div>
+        <div class="trench-steps" id="trench-steps" aria-hidden="true">
+          {% set step_kinds = [('wire', 'Arame farpado'), ('tunnel', 'Túnel'), ('sandbag', 'Sacos de areia')] %}
+          {% for question in trench.questions %}
+          {% set kind = step_kinds[loop.index0 % 3] %}
+          <span class="trench-step trench-step--{{ kind[0] }}{{ ' is-active' if loop.first else '' }}"
+            data-step="{{ loop.index }}" title="{{ kind[1] }}"></span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <article class="trench-card">
+        <span class="trench-order" id="trench-order">ORDEM 1/{{ trench.questions | length }}</span>
+        <h3 id="trench-title">{{ trench.questions[0].title if trench.questions else '' }}</h3>
+        <p id="trench-question">
+          {{ trench.questions[0].prompt if trench.questions else '' }}
+        </p>
+        <div class="trench-options" id="trench-options"></div>
+        <p class="trench-feedback" id="trench-feedback" aria-live="polite"></p>
+        <button class="trench-reset" id="trench-reset" hidden>Reiniciar missão</button>
+      </article>
+    </section>
+  </div>
+  {% endif %}
+</section>

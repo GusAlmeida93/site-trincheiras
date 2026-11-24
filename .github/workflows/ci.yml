@@ -1,0 +1,118 @@
+name: CI
+
+# The same gates as `make check`, split into jobs so they run in parallel:
+# backend tests, generated-file drift, type checks, the browser suite against
+# the production image, and Terraform formatting/validation.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        # Same major version as docker-compose and Aurora.
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: trincheiras
+          POSTGRES_PASSWORD: trincheiras
+          POSTGRES_DB: trincheiras
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U trincheiras -d trincheiras"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.4.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+      - name: Install dependencies
+        run: uv sync --frozen
+      - name: pytest
+        run: uv run pytest
+      - name: OpenAPI spec is up to date
+        run: uv run python -m app.openapi_export --check openapi.json
+
+  frontend:
+    name: Frontend types
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - name: Type-check the app and the e2e specs
+        run: npm run typecheck && npm run typecheck:e2e
+      - name: Generated API types are up to date
+        run: |
+          npm run gen:api
+          git diff --exit-code -- src/api/types.gen.ts
+
+  e2e:
+    name: Browser tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - name: Install browsers
+        run: npx playwright install --with-deps
+      # Builds the production image and boots docker-compose.test.yml, so this
+      # job is also the image build check.
+      - name: Playwright
+        run: npm run e2e
+      - name: Upload traces
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-results
+          path: frontend/test-results
+          retention-days: 7
+
+  infra:
+    name: Terraform
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra
+    steps:
+      - uses: actions/checkout@v7
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: "1.16.6"
+      - run: terraform fmt -check -recursive
+      # No backend and no credentials: this checks the configuration only.
+      - run: terraform init -backend=false -input=false
+      - run: terraform validate

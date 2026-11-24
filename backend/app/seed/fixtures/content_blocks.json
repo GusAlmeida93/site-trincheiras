@@ -1,0 +1,221 @@
+[
+  {
+    "kind": "flip_card",
+    "slug": "causes",
+    "position": 0,
+    "data": {
+      "intel_key": "causas",
+      "tag": "Causas",
+      "photo_class": "photo-causas",
+      "foot": "Big Four",
+      "back_title": "Causas",
+      "back_text": "A guerra terminou em 1918 com destruição massiva. França e Reino Unido queriam punir a Alemanha e garantir segurança para evitar novos conflitos."
+    }
+  },
+  {
+    "kind": "flip_card",
+    "slug": "main-points",
+    "position": 1,
+    "data": {
+      "intel_key": "pontos",
+      "tag": "Principais Pontos",
+      "photo_class": "photo-pontos",
+      "foot": "Signing Treaty",
+      "back_title": "Principais Pontos",
+      "back_text": "O Tratado impôs perdas territoriais, limitação militar, pagamento de indenizações e a cláusula de culpa pela guerra."
+    }
+  },
+  {
+    "kind": "flip_card",
+    "slug": "consequences",
+    "position": 2,
+    "data": {
+      "intel_key": "consequencias",
+      "tag": "Consequências",
+      "photo_class": "photo-consequencias",
+      "foot": "Anti-Treaty Rally",
+      "back_title": "Consequências",
+      "back_text": "A Alemanha enfrentou crise econômica, inflação e desemprego. A sensação de humilhação agravou tensões políticas no período entre guerras."
+    }
+  },
+  {
+    "kind": "flip_card",
+    "slug": "reactions",
+    "position": 3,
+    "data": {
+      "intel_key": "reacoes",
+      "tag": "Reações",
+      "photo_class": "photo-reacoes",
+      "foot": "Reações Populares",
+      "back_title": "Reações",
+      "back_text": "Muitos alemães consideraram o acordo um “Diktat”. Protestos e discursos nacionalistas cresceram, contribuindo para a radicalização política."
+    }
+  },
+  {
+    "kind": "participant",
+    "slug": "france",
+    "position": 0,
+    "data": {
+      "participant_key": "franca",
+      "title": "França",
+      "leader": "Georges Clemenceau",
+      "role": "O Tigre",
+      "text": "Defendia punições severas para enfraquecer a Alemanha, recuperar regiões perdidas e garantir segurança para que a França não sofresse nova invasão. A França havia sofrido enormes perdas humanas e materiais durante a guerra, com combates travados em seu próprio território.",
+      "objectives": [
+        "Recuperar a Alsácia-Lorena, perdida em 1871",
+        "Exigir reparações financeiras pesadas para reconstruir o país",
+        "Desmilitarizar a Renânia como zona de segurança",
+        "Enfraquecer permanentemente o poderio militar alemão"
+      ],
+      "quote": "\"A Alemanha pagará por tudo!\" — Posição firme de Clemenceau durante as negociações."
+    }
+  },
+  {
+    "kind": "participant",
+    "slug": "united-kingdom",
+    "position": 1,
+    "data": {
+      "participant_key": "reino",
+      "title": "Reino Unido",
+      "leader": "David Lloyd George",
+      "role": "O Mediador Pragmático",
+      "text": "Queria punir a Alemanha, mas sem destruí-la totalmente, para preservar o comércio europeu e evitar um colapso econômico no continente. O Reino Unido dependia do equilíbrio de poder europeu e temia que uma Alemanha humilhada gerasse instabilidade.",
+      "objectives": [
+        "Manter o equilíbrio de poder na Europa continental",
+        "Preservar relações comerciais com a Alemanha",
+        "Expandir o domínio colonial britânico com mandatos",
+        "Garantir a supremacia naval britânica"
+      ],
+      "quote": "\"Podemos arrancar da Alemanha tudo o que ela tem, mas não podemos impedi-la de se levantar novamente.\" — Lloyd George sobre os riscos de punições excessivas."
+    }
+  },
+  {
+    "kind": "participant",
+    "slug": "usa",
+    "position": 2,
+    "data": {
+      "participant_key": "eua",
+      "title": "Estados Unidos",
+      "leader": "Woodrow Wilson",
+      "role": "O Idealista",
+      "text": "Propunha uma paz negociada, com menos vingança e mais cooperação, defendendo princípios dos 14 Pontos e a criação da Liga das Nações. Wilson acreditava que a paz duradoura dependia de justiça e autodeterminação dos povos, não de punição.",
+      "objectives": [
+        "Implementar os 14 Pontos como base para a paz",
+        "Criar a Liga das Nações para resolver conflitos futuros",
+        "Defender a autodeterminação dos povos europeus",
+        "Promover o livre comércio e a democracia no mundo"
+      ],
+      "quote": "\"Devemos tornar o mundo seguro para a democracia.\" — Woodrow Wilson, ao justificar a entrada dos EUA na guerra."
+    }
+  },
+  {
+    "kind": "participant",
+    "slug": "germany",
+    "position": 3,
+    "data": {
+      "participant_key": "alemanha",
+      "title": "Alemanha",
+      "leader": "Delegação alemã",
+      "role": "A Nação Derrotada",
+      "text": "Buscava reduzir perdas territoriais, militares e financeiras, mas teve pouca influência nas decisões centrais da Conferência de Paz. A delegação alemã não participou das negociações e recebeu as condições prontas, sendo pressionada a assinar sob ameaça de invasão.",
+      "objectives": [
+        "Negociar termos menos severos para o tratado",
+        "Preservar a integridade territorial do país",
+        "Manter capacidade econômica de recuperação",
+        "Rejeitar a cláusula de culpa exclusiva pela guerra"
+      ],
+      "quote": "\"Este tratado é uma sentença de morte para a Alemanha.\" — Reação da imprensa alemã ao conhecer os termos do acordo."
+    }
+  },
+  {
+    "kind": "clause",
+    "slug": "article-51",
+    "position": 0,
+    "data": {
+      "article_key": "51",
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 5h2l1 10h12l1-10h2\"/><path d=\"M6 5v14h12V5\"/><path d=\"M9 8v3m0 0l3-2m-3 2l3 2\"/><path d=\"M6 19l-2 2m14-2l2 2\"/><rect x=\"8\" y=\"3\" width=\"8\" height=\"2\" rx=\"1\"/><path d=\"M10 12h4m-2-2v4\" opacity=\"0.5\"/></svg>",
+      "number": "Artigo 51",
+      "title": "Devolução da Alsácia-Lorena",
+      "quote": "“Os territórios cedidos à Alemanha em virtude dos preliminares de paz de 1871 são reintegrados à soberania francesa.”",
+      "impact": "A Alemanha perdeu uma região estratégica e simbolicamente importante, fortalecendo sentimentos de revanche e ressentimento nacional."
+    }
+  },
+  {
+    "kind": "clause",
+    "slug": "article-119",
+    "position": 1,
+    "data": {
+      "article_key": "119",
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M3.5 9h17M3.5 15h17\"/><ellipse cx=\"12\" cy=\"12\" rx=\"4\" ry=\"9\"/><path d=\"M7 5l1.5 1M17 5l-1.5 1M7 19l1.5-1M17 19l-1.5-1\" opacity=\"0.6\"/><circle cx=\"8\" cy=\"10\" r=\"0.8\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"16\" cy=\"13\" r=\"0.8\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"11\" cy=\"15\" r=\"0.8\" fill=\"currentColor\" stroke=\"none\"/></svg>",
+      "number": "Artigo 119",
+      "title": "Renúncia do Império Colonial",
+      "quote": "“A Alemanha renuncia, em favor das potências aliadas e associadas, todos os seus direitos e títulos sobre suas possessões ultramarinas.”",
+      "impact": "O país perdeu colônias, acesso direto a matérias-primas e parte de sua projeção internacional."
+    }
+  },
+  {
+    "kind": "clause",
+    "slug": "article-160",
+    "position": 2,
+    "data": {
+      "article_key": "160",
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3L4 7v5c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V7l-8-4z\"/><path d=\"M8.5 9l7 7M15.5 9l-7 7\" stroke-width=\"2\" opacity=\"0.7\"/></svg>",
+      "number": "Artigo 160",
+      "title": "Desmilitarização",
+      "quote": "“As forças armadas alemãs não deverão ultrapassar 100 mil homens, destinadas exclusivamente à manutenção da ordem interna.”",
+      "impact": "A capacidade militar alemã foi reduzida, diminuindo seu poder de reação e sua influência estratégica no curto prazo."
+    }
+  },
+  {
+    "kind": "clause",
+    "slug": "article-231",
+    "position": 3,
+    "data": {
+      "article_key": "231",
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3v4\"/><path d=\"M12 7l-7 3\"/><path d=\"M12 7l7 3\"/><path d=\"M5 10v1a3 3 0 003 3h0\"/><path d=\"M19 10v1a3 3 0 01-3 3h0\"/><rect x=\"3\" y=\"13\" width=\"6\" height=\"3\" rx=\"1\"/><rect x=\"15\" y=\"13\" width=\"6\" height=\"3\" rx=\"1\"/><path d=\"M12 7v14\"/><path d=\"M9 21h6\" stroke-width=\"2\"/><circle cx=\"6\" cy=\"14.5\" r=\"0.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"18\" cy=\"14.5\" r=\"0.5\" fill=\"currentColor\" stroke=\"none\"/></svg>",
+      "number": "Artigo 231",
+      "title": "A Cláusula de Culpa",
+      "quote": "“A Alemanha e seus aliados aceitam a responsabilidade por todas as perdas e danos sofridos pelos governos aliados e associados.”",
+      "impact": "Essa cláusula criou base política e jurídica para punições mais duras e alimentou forte sensação de humilhação nacional."
+    }
+  },
+  {
+    "kind": "clause",
+    "slug": "article-232",
+    "position": 4,
+    "data": {
+      "article_key": "232",
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"8\" width=\"16\" height=\"12\" rx=\"2\"/><path d=\"M4 12h16\"/><circle cx=\"12\" cy=\"16\" r=\"2\"/><path d=\"M8 8V6a4 4 0 018 0v2\"/><path d=\"M9 12v-1m6 1v-1\" opacity=\"0.5\"/><path d=\"M7 20l-1 1m11-1l1 1\" opacity=\"0.4\"/></svg>",
+      "number": "Artigo 232",
+      "title": "Reparações Financeiras",
+      "quote": "“A Alemanha compromete-se a reparar os danos causados à população civil e aos bens dos países aliados e associados.”",
+      "impact": "As reparações pesaram sobre a economia, contribuindo para inflação, desemprego e instabilidade política."
+    }
+  },
+  {
+    "kind": "clause",
+    "slug": "article-42",
+    "position": 5,
+    "data": {
+      "article_key": "42",
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 13c0-2 1-4 3-5l2-4h6l2 4c2 1 3 3 3 5\"/><path d=\"M4 13h16v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z\"/><path d=\"M8 17v2m8-2v2\"/><path d=\"M10 4h4v1h-4z\" opacity=\"0.5\"/><circle cx=\"12\" cy=\"12\" r=\"5\" stroke-dasharray=\"2 2\" opacity=\"0.4\"/><path d=\"M3 3l18 18\" stroke-width=\"2.2\" stroke=\"#b04a49\"/></svg>",
+      "number": "Artigo 42",
+      "title": "Desmilitarização da Renânia",
+      "quote": "“É proibido à Alemanha manter ou construir fortificações na margem esquerda do Reno e em zonas determinadas na margem direita.”",
+      "impact": "A Renânia virou uma zona de segurança para a França, mas muitos alemães viram isso como perda de soberania."
+    }
+  },
+  {
+    "kind": "clause",
+    "slug": "article-87",
+    "position": 6,
+    "data": {
+      "article_key": "87",
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M12 3v4m0 10v4M3 12h4m10 0h4\"/><path d=\"M12 9l0-2\" stroke-width=\"2.5\"/><path d=\"M14.5 11l1.7-1\" stroke-width=\"1\" opacity=\"0.5\"/><path d=\"M14.5 13l1.7 1\" stroke-width=\"1\" opacity=\"0.5\"/><path d=\"M9.5 11l-1.7-1\" stroke-width=\"1\" opacity=\"0.5\"/><path d=\"M9.5 13l-1.7 1\" stroke-width=\"1\" opacity=\"0.5\"/><path d=\"M5.5 5.5l2.1 2.1m8.8 8.8l2.1 2.1M5.5 18.5l2.1-2.1m8.8-8.8l2.1-2.1\" stroke-dasharray=\"1 2\" opacity=\"0.3\"/></svg>",
+      "number": "Artigo 87",
+      "title": "O Corredor Polonês",
+      "quote": "“A Alemanha reconhece a independência da Polônia e renuncia aos territórios definidos pelas potências aliadas.”",
+      "impact": "A redefinição territorial separou áreas alemãs e ampliou tensões fronteiriças que continuaram no período entre guerras."
+    }
+  }
+]
