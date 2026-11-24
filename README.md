@@ -51,7 +51,7 @@ lives in PostgreSQL, and the same engine can host new lessons without code chang
 ```
 
 **Single-service design:** one FastAPI process serves the page, the static assets, and
-the API — one container on Cloud Run. Display-only content (flip cards, participants,
+the API — one container, run by AWS Lambda in production. Display-only content (flip cards, participants,
 treaty clauses) is **server-rendered** from the database; interactive data (map
 features, quiz questions) is fetched by TypeScript from the JSON API.
 
@@ -91,7 +91,8 @@ site-trincheiras/
 │   │   ├── models/               # SQLAlchemy 2 ORM (one module per domain)
 │   │   ├── schemas/              # Pydantic contracts (API + seed validation)
 │   │   ├── services/             # domain boundaries: players, content, answers, reports
-│   │   ├── routers/              # pages, health, players, answers, lessons, admin, reports
+│   │   ├── routers/              # pages, health, players, answers, lessons, admin, reports,
+│   │   │                         #   ops (migrate/seed, mounted only with OPS_MODE=true)
 │   │   ├── templates/            # base.html + index.html + partials/ (9 sections)
 │   │   ├── static/               # avatars/, img/; dist/ = Vite output (gitignored)
 │   │   ├── seed/                 # fixtures/*.json + idempotent seed runner
@@ -110,6 +111,7 @@ site-trincheiras/
 │   ├── e2e/                      # Playwright specs + compose-driven setup
 │   ├── vite.config.ts            # manifest build into backend/app/static/dist
 │   └── playwright.config.ts
+├── infra/                        # Terraform for AWS + deploy.sh (see "Deploying to AWS")
 ├── Dockerfile                    # node:22 build stage → python:3.13-slim runtime
 ├── docker-compose.yml            # local stack (db + app, auto migrate/seed)
 ├── docker-compose.test.yml       # throwaway e2e stack on :8001 (tmpfs db)
@@ -190,53 +192,110 @@ curl -H "X-Admin-Token: $TOKEN" 'http://localhost:8000/api/v1/reports/players/1/
 curl -H "X-Admin-Token: $TOKEN" 'http://localhost:8000/api/v1/reports/answers?activity=trench-mission&limit=50'
 ```
 
-## Deploying to Google Cloud Run
+## Deploying to AWS
 
-```bash
-export PROJECT_ID=your-gcp-project-id
-export REGION=us-central1
-export INSTANCE=$PROJECT_ID:$REGION:your-cloudsql-instance
-export DB_URL="postgresql+psycopg://USER:PASS@/trincheiras?host=/cloudsql/$INSTANCE"
+Production runs in AWS account `249744179072`, region `us-east-1`, at
+**https://historiaporline.com.br**. Everything is Terraform in [`infra/`](infra/).
 
-# 1. Build & push
-gcloud builds submit --tag gcr.io/$PROJECT_ID/site-trincheiras
-
-# 2. Migrate + seed via one-off jobs (same image, command override)
-gcloud run jobs create trincheiras-migrate --image gcr.io/$PROJECT_ID/site-trincheiras \
-  --region $REGION --set-cloudsql-instances $INSTANCE \
-  --set-env-vars "DATABASE_URL=$DB_URL" --command alembic --args upgrade,head
-gcloud run jobs execute trincheiras-migrate --region $REGION --wait
-
-gcloud run jobs create trincheiras-seed --image gcr.io/$PROJECT_ID/site-trincheiras \
-  --region $REGION --set-cloudsql-instances $INSTANCE \
-  --set-env-vars "DATABASE_URL=$DB_URL" --command python --args -m,app.seed
-gcloud run jobs execute trincheiras-seed --region $REGION --wait
-
-# 3. Deploy the service
-gcloud run deploy site-trincheiras \
-  --image gcr.io/$PROJECT_ID/site-trincheiras \
-  --platform managed --region $REGION --allow-unauthenticated \
-  --add-cloudsql-instances $INSTANCE \
-  --set-env-vars "DATABASE_URL=$DB_URL" \
-  --set-secrets "ADMIN_TOKEN=trincheiras-admin-token:latest"
+```
+ Browser ──► CloudFront ──signed (SigV4)──► Lambda "web" ──► Aurora Serverless v2
+             TLS, custom domain,            this image +      PostgreSQL 16, private
+             /static/* cached at the edge   Lambda Web        subnets, pauses when idle
+                                            Adapter
+ aws lambda invoke ───────────────────────► Lambda "ops" ──► (same database)
+                                            same image, POST /internal/ops
 ```
 
-For subsequent releases: build → execute the migrate job (and seed job on content
-changes) → deploy. Small-scale alternative: set `RUN_MIGRATIONS=true`/`RUN_SEED=true`
-on the service and skip the jobs (fine at min-instances 0–1; Alembic serializes via its
-version-table lock).
+- **Scale to zero.** Lambda bills per request and Aurora pauses after 5 idle minutes,
+  so an idle month costs storage only (roughly US$1–5). The first page load after a
+  pause waits for the database to resume: about 15 s, 30 s or more after a day asleep.
+  Open the site a minute before class.
+- **Same container as local.** The [Lambda Web Adapter](https://github.com/awslabs/aws-lambda-web-adapter)
+  in the image turns Lambda invocations into HTTP requests to uvicorn; outside Lambda it
+  does nothing.
+- **Private database.** Aurora has no public address, and the VPC has no internet
+  gateway or NAT. Migrations and the seed therefore run through the `ops` function
+  (`OPS_MODE=true` mounts `POST /internal/ops`), which has no URL and is reachable only
+  with IAM credentials via `aws lambda invoke`.
 
-### Portability (AWS ECS or any container platform)
+### Release
 
-The image has no GCP dependencies:
+```bash
+./infra/deploy.sh
+```
 
-- Listens on `$PORT` (defaults to 8080); stateless container.
-- `GET /healthz` never touches the database — use it for ALB target-group checks so DB
-  blips don't restart-loop tasks.
-- `DATABASE_URL` works with RDS over TCP: `postgresql+psycopg://user:pass@host:5432/db?sslmode=require`.
-- Inject `ADMIN_TOKEN` via ECS task-definition `secrets` (SSM / Secrets Manager).
-- Run migrations/seed as one-off `RunTask` executions with command overrides
-  (`alembic upgrade head` / `python -m app.seed`).
+Builds the arm64 image, pushes it to ECR tagged with the commit, runs `terraform apply`
+(it asks before changing anything), then invokes the `ops` function with
+`{"task": "migrate-and-seed"}`. Both steps are idempotent. Needs `aws` (the `personal`
+profile), `terraform` and Docker.
+
+Other ops tasks: `migrate`, `seed`, `status` (Alembic revision and row counts):
+
+```bash
+aws lambda invoke --function-name trincheiras-ops --cli-binary-format raw-in-base64-out \
+  --payload '{"task": "status"}' /dev/stdout
+```
+
+### Domain (registro.br)
+
+The domain is registered at registro.br and its DNS is hosted in Route 53.
+`domain_delegated` in [`infra/terraform.tfvars`](infra/terraform.tfvars) gates
+everything that needs the delegation: while `false`, the site answers only on its
+`cloudfront.net` address (`terraform output cloudfront_url`).
+
+1. `cd infra && terraform output name_servers` lists four `awsdns` servers.
+2. At registro.br, open the domain → **DNS** → **Alterar servidores DNS** and enter
+   those four (no trailing dot). Leave the DS/DNSSEC fields empty.
+3. Once `dig +short NS historiaporline.com.br` returns them, set
+   `domain_delegated = true` and run `./infra/deploy.sh`. That issues the certificate
+   (validated through the zone), attaches the domain to CloudFront, creates the
+   `A`/`AAAA` records for the apex and `www`, and redirects `www` to the apex.
+
+### Admin and report calls in production
+
+The token is generated by Terraform: `cd infra && terraform output -raw admin_token`.
+
+CloudFront signs each request to Lambda, and Lambda rejects a `POST`/`PUT` whose body
+hash is not part of that signature. The frontend sends it automatically
+(`x-amz-content-sha256` in `frontend/src/api/client.ts`); with curl, add it yourself:
+
+```bash
+BODY='{"title": "..."}'
+curl -X PUT https://historiaporline.com.br/api/v1/admin/lessons/... \
+  -H "X-Admin-Token: $TOKEN" -H 'Content-Type: application/json' \
+  -H "x-amz-content-sha256: $(printf %s "$BODY" | shasum -a 256 | cut -d' ' -f1)" \
+  -d "$BODY"
+```
+
+`GET` requests need nothing extra.
+
+### Settings that matter on Lambda
+
+| Variable | Value | Why |
+| --- | --- | --- |
+| `DB_POOL` | `false` | A frozen sandbox would hold a pooled connection open, and Aurora pauses only when none is left |
+| `DB_CONNECT_RETRY_SECONDS` | `45` (web), `120` (ops) | Wait for Aurora to resume instead of failing the request |
+| `AWS_LWA_READINESS_CHECK_PATH` | `/healthz` | Cold starts must not depend on the database |
+| `OPS_MODE` | `true` on `ops` only | Mounts `POST /internal/ops` |
+
+### One-time bootstrap
+
+The Terraform state bucket was created by hand:
+
+```bash
+aws s3api create-bucket --bucket trincheiras-terraform-state-249744179072 --region us-east-1
+```
+
+```bash
+aws s3api put-bucket-versioning --bucket trincheiras-terraform-state-249744179072 --versioning-configuration Status=Enabled
+```
+
+### Other container platforms
+
+The image has no AWS dependencies either: it listens on `$PORT` (default 8080), is
+stateless, answers `GET /healthz` without touching the database, and takes any
+PostgreSQL `DATABASE_URL`. With `RUN_MIGRATIONS=true` / `RUN_SEED=true` the entrypoint
+migrates and seeds on start (what docker-compose does).
 
 ## Querying the local database
 

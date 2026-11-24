@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 import { expect, test } from '@playwright/test';
 
 import { resetVolatileData } from './helpers';
@@ -51,6 +53,14 @@ test.describe('enlistment', () => {
     expect(posted.name).toBe('Maria Clara Santos'); // whitespace normalized
     expect(posted.class_group).toBe('9º B');
     expect(posted.recruit_number).toMatch(/^TRN-\d{6}-\d{4}$/);
+
+    // CloudFront signs requests to the Lambda origin; a POST without the hash
+    // of its exact body is rejected there (403) before it reaches the app.
+    const sentBody = response.request().postDataBuffer();
+    expect(sentBody).not.toBeNull();
+    expect(response.request().headers()['x-amz-content-sha256']).toBe(
+      createHash('sha256').update(sentBody!).digest('hex')
+    );
 
     const created = (await response.json()) as { id: number };
 

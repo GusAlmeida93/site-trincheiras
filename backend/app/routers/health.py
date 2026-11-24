@@ -7,6 +7,6 @@ router = APIRouter(tags=["health"])
 
 @router.get("/healthz")
 def healthz() -> HealthStatus:
-    # Liveness only — never touches the database, so Cloud Run / ALB health
-    # checks stay green through transient DB outages.
+    # Liveness only — never touches the database, so Lambda cold starts and
+    # health checks stay green while the database is paused or unreachable.
     return HealthStatus()
